@@ -1,0 +1,999 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Jonah Kris Llantino</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=Pinyon+Script&display=swap">
+<style>
+/* Single deliberate look: a navy leather planner with ivory pages. Colors are painted explicitly. */
+:root{
+  color-scheme:light;
+  --leather:#0E1526; --leather-2:#141D33; --navy:#1F2A44; --navy-2:#2A3857; --ink:#0B0E14; --maroon:#7A1F2B; --maroon-2:#94303E; --rose:#D48A95;
+  --paper:#F5F3EF; --paper-2:#ECE8E1; --paper-3:#E2DCD2; --line:#D6CFC4; --text:#262A33; --muted:#666B77; --on-dark:#ECEFF5; --on-dark-2:#A3ACC0;
+  --serif:"DM Serif Display","Playfair Display",Georgia,serif; --sans:"Montserrat",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace; --script:"Pinyon Script","Snell Roundhand","Apple Chancery",cursive;
+  --ease:cubic-bezier(.22,.8,.2,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--leather);color:var(--text);font-family:var(--sans);font-size:10pt;line-height:1.75;-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(1200px 600px at 10% -10%,rgba(122,31,43,.18),transparent 60%),radial-gradient(900px 500px at 110% 10%,rgba(42,56,87,.55),transparent 60%);background-attachment:fixed}
+a{color:inherit}
+img{max-width:100%;display:block}
+h1,h2,h3,h4{margin:0;font-family:var(--serif);font-weight:500;color:var(--ink);line-height:1.08;text-wrap:balance}
+p{margin:0}
+.mono{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase}
+:focus-visible{outline:2px solid var(--maroon);outline-offset:3px;border-radius:3px}
+button{font:inherit}
+
+/* ---------- desk: topbar ---------- */
+.topbar{max-width:1240px;margin:0 auto;padding:18px clamp(16px,3vw,32px) 14px;display:flex;align-items:center;justify-content:space-between;gap:16px;color:var(--on-dark)}
+.sig{font-family:var(--serif);font-size:21px;font-weight:500;text-decoration:none;color:var(--on-dark);letter-spacing:.01em;white-space:nowrap}
+.sig i{font-style:italic;color:var(--rose)}
+.today{color:var(--on-dark-2);text-align:center}
+.pill-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid rgba(236,239,245,.35);border-radius:999px;color:var(--on-dark);text-decoration:none;font-weight:600;font-size:12.5px;transition:background .25s var(--ease),border-color .25s}
+.pill-btn:hover{background:rgba(236,239,245,.08);border-color:var(--on-dark)}
+@media (max-width:760px){.today{display:none}}
+
+/* ---------- planner body ---------- */
+.planner{max-width:1240px;margin:0 auto;padding:0 clamp(16px,3vw,32px) 40px;display:grid;grid-template-columns:minmax(0,1fr) 46px;align-items:start}
+.sheet{position:relative;background:var(--paper);border-radius:14px 4px 4px 14px;box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 30px 60px -20px rgba(0,0,0,.55),0 2px 0 var(--paper-3);min-height:80vh;overflow:hidden;view-transition-name:sheet}
+.sheet::before{content:"";position:absolute;inset:0 auto 0 0;width:42px;background:
+  radial-gradient(circle at 21px 50%,var(--leather) 0 6px,rgba(0,0,0,.18) 6.5px,transparent 8px) 0 0/42px 64px repeat-y,
+  linear-gradient(90deg,var(--paper-2),var(--paper) 90%);border-right:1px dashed var(--line);pointer-events:none}
+.content{padding:clamp(22px,3.4vw,44px) clamp(18px,4vw,56px) clamp(40px,5vw,64px) calc(42px + clamp(18px,3.4vw,48px))}
+@media (max-width:820px){
+  .planner{grid-template-columns:1fr;padding-bottom:96px}
+  .sheet::before{width:0;border:0;background:none}
+  .content{padding-left:clamp(16px,4vw,32px);padding-right:clamp(16px,4vw,32px)}
+}
+
+/* divider tabs */
+.tabs{position:sticky;top:clamp(90px,14vh,140px);display:flex;flex-direction:column;gap:6px;padding-top:36px}
+.tab{writing-mode:vertical-rl;text-decoration:none;color:var(--on-dark);font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:18px 0;width:40px;border-radius:0 10px 10px 0;display:flex;align-items:center;justify-content:center;
+  transition:width .35s var(--ease),transform .35s var(--ease),background .25s,color .25s;transform:translateX(-4px);box-shadow:inset 6px 0 8px -6px rgba(0,0,0,.45)}
+.tab:hover{transform:translateX(0)}
+.tab[data-c="navy"]{background:var(--navy-2)} .tab[data-c="maroon"]{background:var(--maroon)} .tab[data-c="ink"]{background:#1A1F2B}
+.tab[aria-current="page"]{background:var(--paper);color:var(--maroon);width:46px;transform:translateX(-6px);box-shadow:none}
+@media (max-width:820px){
+  .tabs{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:40;flex-direction:row;gap:0;padding:0 0 env(safe-area-inset-bottom,0px);background:var(--leather);border-top:1px solid rgba(255,255,255,.08)}
+  .tab{writing-mode:horizontal-tb;flex:1;width:auto;padding:14px 4px;border-radius:0;transform:none;font-size:10.5px;letter-spacing:.08em;box-shadow:none}
+  .tab:hover{transform:none}
+  .tab[aria-current="page"]{width:auto;transform:none;box-shadow:inset 0 3px 0 var(--maroon)}
+}
+
+/* page chrome */
+.pagehead{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-bottom:12px;margin-bottom:clamp(24px,4vw,44px);border-bottom:1px solid var(--line);color:var(--muted)}
+.pagehead b{color:var(--maroon);font-weight:500}
+.eyebrow{color:var(--maroon);margin-bottom:14px;display:block}
+.lede{font-size:11.5pt;max-width:56ch;color:var(--text)}
+.h-display{font-size:clamp(38px,6vw,74px);letter-spacing:-.01em;font-weight:400;line-height:1.04}
+.h-display em{font-style:italic;color:var(--maroon)}
+.h-sec{font-size:clamp(28px,3.8vw,44px);font-weight:400}
+.h-sec em{font-style:italic;color:var(--maroon)}
+.sec{margin-top:clamp(56px,8vw,96px)}
+.sec-top{display:flex;justify-content:space-between;align-items:end;flex-wrap:wrap;gap:16px 32px;margin-bottom:26px}
+.sec-top p{max-width:46ch;color:var(--muted)}
+.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border-radius:999px;font-weight:600;font-size:12.5px;text-decoration:none;border:1px solid transparent;cursor:pointer;transition:transform .25s var(--ease),box-shadow .25s var(--ease),background .25s}
+.btn-dark{background:var(--navy);color:#fff}
+.btn-dark:hover{transform:translateY(-2px);box-shadow:0 12px 24px -10px rgba(31,42,68,.7)}
+.btn-dark::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.2) 50%,transparent 65%);transform:translateX(-120%);transition:transform .7s var(--ease)}
+.btn-dark:hover::after{transform:translateX(120%)}
+.btn-maroon{background:var(--maroon);color:#fff}
+.btn-maroon:hover{transform:translateY(-2px);box-shadow:0 12px 24px -10px rgba(122,31,43,.7)}
+.btn-line{border-color:var(--line);color:var(--ink);background:transparent}
+.btn-line:hover{border-color:var(--ink)}
+.btn:active{transform:scale(.98)}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+
+/* ---------- OFFER ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(28px,5vw,64px);align-items:center}
+.chips{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:26px;padding-top:18px;border-top:1px solid var(--line)}
+.chips span{display:inline-flex;align-items:center;gap:8px;font-size:12px}
+.chips span::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--maroon)}
+.chips b{color:var(--ink)}
+.portrait{position:relative;justify-self:center;width:min(100%,380px)}
+.polaroid{background:#fff;padding:12px 12px 14px;border-radius:3px;box-shadow:0 1px 1px rgba(0,0,0,.06),0 24px 40px -18px rgba(14,21,38,.55);transform:rotate(1.6deg);transition:transform .6s var(--ease)}
+.polaroid:hover{transform:rotate(0)}
+.polaroid img{aspect-ratio:4/5;object-fit:cover;object-position:50% 18%;width:100%;height:auto;background:var(--navy)}
+.polaroid .cap{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;color:var(--muted)}
+.polaroid .cap .s{font-family:var(--script);font-size:26px;color:var(--navy);letter-spacing:0;text-transform:none;line-height:1}
+.clip{position:absolute;top:-18px;left:38px;width:22px;height:62px;border:3px solid #8C93A3;border-radius:11px;border-bottom-color:transparent;transform:rotate(-8deg);z-index:2}
+.clip::after{content:"";position:absolute;left:3px;right:3px;top:8px;height:40px;border:3px solid #8C93A3;border-top:0;border-radius:0 0 8px 8px}
+.clock-card{position:absolute;right:-18px;bottom:-40px;background:var(--navy);color:var(--on-dark);border-radius:12px;padding:14px 16px 12px;box-shadow:0 18px 30px -14px rgba(0,0,0,.6);width:238px;transform:rotate(-2deg)}
+.clock-card .zones{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.14)}
+.clock-card .zones b{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--rose);font-weight:500}
+.clock-card .zones span{font-size:11.5px;color:#fff;font-variant-numeric:tabular-nums;white-space:nowrap}
+.clock-card .t{font-family:var(--serif);font-size:24px;line-height:1.1;font-variant-numeric:tabular-nums}
+.clock-card .mono{color:var(--on-dark-2);font-size:9.5px}
+.clock-card .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#5FD08A;margin-right:6px;box-shadow:0 0 0 0 rgba(95,208,138,.6);animation:pulse 2.4s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 8px rgba(95,208,138,0)}100%{box-shadow:0 0 0 0 rgba(95,208,138,0)}}
+@media (max-width:900px){.hero{grid-template-columns:1fr}.portrait{margin-top:10px;margin-bottom:30px;width:min(100%,300px)}.clock-card{right:-6px}}
+
+/* week board */
+.week{border:1px solid var(--line);border-radius:12px;background:#FBFAF7;overflow:hidden}
+.week-head{display:grid;grid-template-columns:64px repeat(5,minmax(0,1fr));border-bottom:1px solid var(--line);background:var(--paper-2)}
+.week-head div{padding:12px 10px;text-align:center}
+.week-head .d{font-family:var(--serif);font-size:22px;color:var(--ink);line-height:1}
+.week-grid{display:grid;grid-template-columns:64px repeat(5,minmax(0,1fr));grid-template-rows:repeat(10,44px);position:relative}
+.hour{grid-column:1;border-top:1px solid var(--paper-3);color:var(--muted);font-size:10px;padding:2px 8px;font-family:var(--mono)}
+.gl{grid-column:2 / -1;border-top:1px solid var(--paper-3)}
+.col-line{border-left:1px solid var(--paper-3);grid-row:1 / -1}
+.evt{margin:3px 5px;border-radius:7px;padding:8px 10px;color:#fff;text-align:left;border:0;cursor:pointer;display:flex;flex-direction:column;gap:2px;overflow:hidden;position:relative;z-index:1;
+  transition:transform .3s var(--ease),box-shadow .3s var(--ease),filter .3s}
+.evt:hover{transform:translateY(-2px);box-shadow:0 12px 20px -10px rgba(14,21,38,.6)}
+.evt[aria-expanded="true"]{box-shadow:0 0 0 3px var(--paper),0 0 0 5px currentColor;filter:saturate(1.1)}
+.evt .et{font-weight:700;font-size:12px;line-height:1.3}
+.evt .eh{font-family:var(--mono);font-size:9.5px;opacity:.8;letter-spacing:.06em}
+.evt.navy{background:var(--navy);color:#fff}.evt.maroon{background:var(--maroon)}.evt.ink{background:#1A1F2B}.evt.slate{background:#4B587A}
+.drawer{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:28px;padding:26px 28px;border-top:1px solid var(--line);background:#fff}
+.drawer h3{font-size:28px}
+.drawer ul{margin:10px 0 0;padding-left:18px;display:grid;gap:4px}
+.drawer .meta{display:grid;gap:12px;align-content:start;border-left:1px solid var(--line);padding-left:24px}
+.drawer .meta b{display:block;color:var(--ink);font-weight:600}
+.drawer-in{animation:rise .5s var(--ease) both}
+@keyframes rise{from{opacity:.001;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (max-width:760px){
+  .week-head,.week-grid{display:none}
+  .agenda{display:grid !important}
+  .drawer{grid-template-columns:1fr;padding:20px}.drawer .meta{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:14px}
+}
+.agenda{display:none;gap:8px;padding:12px}
+.agenda .evt{margin:0}
+
+/* proof band */
+.band{margin-inline:calc(-1 * clamp(18px,4vw,56px)) calc(-1 * clamp(18px,4vw,56px));margin-left:calc(-1 * (42px + clamp(18px,3.4vw,48px)));padding:clamp(40px,6vw,64px) clamp(18px,4vw,56px) clamp(40px,6vw,64px) calc(42px + clamp(18px,3.4vw,48px));background:var(--navy);color:var(--on-dark);position:relative}
+.band::before{content:"";position:absolute;inset:0 auto 0 0;width:42px;background:radial-gradient(circle at 21px 50%,var(--leather) 0 6px,transparent 7px) 0 0/42px 64px repeat-y}
+@media (max-width:820px){.band{margin-left:calc(-1 * clamp(16px,4vw,32px));margin-right:calc(-1 * clamp(16px,4vw,32px));padding-left:clamp(16px,4vw,32px);padding-right:clamp(16px,4vw,32px)}.band::before{display:none}}
+.proof{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.35fr) minmax(0,.8fr) minmax(0,.9fr);gap:clamp(24px,4vw,64px)}
+.proof > div{border-left:1px solid rgba(255,255,255,.14);padding-left:clamp(14px,1.6vw,22px)}
+.proof .n{font-family:var(--serif);font-size:clamp(32px,4vw,52px);white-space:nowrap;line-height:1;color:#fff;font-variant-numeric:tabular-nums}
+.proof .l{color:var(--on-dark-2);margin-top:10px;max-width:24ch}
+@media (max-width:760px){.proof{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.marquee{overflow:hidden;margin-top:40px;border-top:1px solid rgba(255,255,255,.12);padding-top:18px;mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.marquee-track{display:flex;gap:34px;width:max-content;animation:slide 38s linear infinite}
+.marquee span{white-space:nowrap;color:var(--on-dark-2);font-weight:500}
+.marquee span::after{content:"◆";margin-left:34px;font-size:7px;color:var(--rose);vertical-align:2px}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+.twocol{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(28px,5vw,72px);align-items:start}
+@media (max-width:860px){.twocol{grid-template-columns:1fr}}
+.closing{margin-top:clamp(56px,8vw,96px);text-align:center;padding:40px 16px;border:1px solid var(--line);border-radius:14px;
+  background:linear-gradient(90deg,transparent 0 44px,rgba(122,31,43,.35) 44px 45px,transparent 45px),repeating-linear-gradient(to bottom,var(--paper-3) 0 1px,transparent 1px 40px);background-color:#FBFAF7}
+.closing .h-sec{font-size:32px;line-height:40px;margin:0}
+.closing p{line-height:40px;max-width:60ch;margin:0 auto;color:var(--muted)}
+.closing .cta{height:80px;margin-top:0;display:flex;align-items:center;justify-content:center}
+@media (max-width:560px){.closing{padding:40px 18px 40px 58px}.closing .h-sec{font-size:24px}}
+
+/* ---------- WORK ---------- */
+.honest{border-left:3px solid var(--maroon);padding:12px 18px;background:#fff;border-radius:0 8px 8px 0;max-width:70ch;margin-top:22px}
+.folders{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:34px 22px;margin-top:40px}
+.folder{position:relative;text-decoration:none;display:block;padding-top:22px;transition:transform .4s var(--ease)}
+.folder:hover{transform:translateY(-6px)}
+.folder .ftab{position:absolute;top:0;left:0;height:26px;padding:3px 16px 0;border-radius:8px 8px 0 0;color:#fff;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em}
+.folder .fbody{border-radius:0 10px 10px 10px;overflow:hidden;box-shadow:0 18px 30px -18px rgba(14,21,38,.55);background:#fff;border:1px solid var(--line)}
+.folder.navy .ftab{background:var(--navy)} .folder.maroon .ftab{background:var(--maroon)} .folder.ink .ftab{background:#1A1F2B}
+.fthumb{aspect-ratio:16/10;overflow:hidden;background:var(--paper-2);position:relative;border-bottom:1px solid var(--line)}
+.fthumb img{width:100%;height:100%;object-fit:cover;object-position:top left;transition:transform .8s var(--ease)}
+.folder:hover .fthumb img{transform:scale(1.04)}
+.finfo{padding:16px 18px 18px}
+.finfo h3{font-size:22px}
+.finfo p{color:var(--muted);margin-top:6px}
+.badge{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:4px;margin-top:10px;background:var(--paper-2);color:var(--navy)}
+.badge.real{background:#F4E3E6;color:var(--maroon)}
+/* typographic thumbs */
+.th-doc{position:absolute;inset:12px 24px -30px;background:#fff;box-shadow:0 8px 20px -8px rgba(0,0,0,.3);padding:14px 16px;font-size:10px;line-height:1.5;color:var(--muted);transform:rotate(-2deg)}
+.th-doc b{display:block;font-family:var(--serif);font-size:15px;color:var(--ink);font-weight:500}
+.th-pass{position:absolute;inset:18px;background:var(--navy);border-radius:10px;color:#fff;display:grid;grid-template-columns:1fr auto;padding:16px 18px;overflow:hidden}
+.th-pass .cities{font-family:var(--serif);font-size:38px;line-height:1;letter-spacing:.02em}
+.th-pass .cities i{font-style:normal;color:var(--rose);font-size:22px;vertical-align:8px;margin:0 6px}
+.th-pass .mono{color:var(--on-dark-2);font-size:9px}
+.th-pass .stub{border-left:2px dashed rgba(255,255,255,.35);padding-left:14px;display:grid;align-content:space-between;text-align:right}
+.th-bars{position:absolute;inset:18px 22px;display:grid;gap:7px;align-content:center}
+.th-bars div{height:10px;border-radius:0 3px 3px 0;background:var(--maroon)}
+.th-bars div:nth-child(odd){background:var(--navy);opacity:.55}
+
+/* ---------- PROJECT DETAIL ---------- */
+.back{display:inline-flex;gap:8px;text-decoration:none;font-weight:600;color:var(--muted)}
+.back:hover{color:var(--ink)}
+.phead{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:40px;margin-top:22px;padding-bottom:28px;border-bottom:2px solid var(--ink)}
+.phead .h-display{font-size:clamp(32px,4.8vw,58px)}
+.phead .sum{margin-top:16px;font-size:11.5pt;max-width:60ch}
+.meta-list{display:grid;border-top:1px solid var(--line)}
+.meta-list div{padding:10px 0;border-bottom:1px solid var(--line)}
+.meta-list dt{color:var(--muted)}
+.meta-list dd{margin:2px 0 0;font-weight:600;color:var(--ink)}
+@media (max-width:860px){.phead{grid-template-columns:1fr;gap:20px}}
+.prose{max-width:68ch;display:grid;gap:12px;margin-top:28px}
+.prose strong{color:var(--ink)}
+.h2s{font-family:var(--serif);font-size:28px;font-weight:400;margin:48px 0 16px;display:flex;align-items:baseline;gap:14px}
+.h2s .mono{color:var(--maroon)}
+.frame{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 18px 30px -22px rgba(14,21,38,.6);cursor:zoom-in;padding:0;display:block;width:100%;text-align:left;color:inherit}
+.frame img{width:100%;height:auto;transition:transform .8s var(--ease)}
+.frame:hover img{transform:scale(1.015)}
+.frame .cap{display:block;padding:10px 14px;font-size:12px;color:var(--muted);border-top:1px solid var(--line)}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:16px}
+.gallery .frame img{aspect-ratio:4/3;object-fit:cover;object-position:top}
+.note{margin-top:26px;padding:14px 18px;border-left:3px solid var(--maroon);background:#F7E9EC;border-radius:0 8px 8px 0;max-width:80ch}
+.note b{color:var(--ink)}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:56px}
+.pager a{display:block;padding:16px 20px;border:1px solid var(--line);border-radius:10px;text-decoration:none;background:#fff;transition:border-color .25s,transform .3s var(--ease)}
+.pager a:hover{border-color:var(--ink);transform:translateY(-2px)}
+.pager .mono{color:var(--muted)}
+.pager b{display:block;margin-top:2px;font-family:var(--serif);font-weight:500;font-size:18px;color:var(--ink)}
+.pager a.next{text-align:right}
+.chiptabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.ct{font-size:12px;font-weight:600;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--muted);cursor:pointer;transition:background .25s,color .25s}
+.ct[aria-selected="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.doc{background:#fff;border:1px solid var(--line);border-radius:10px;padding:clamp(18px,3vw,32px)}
+.doc h3{font-size:24px}
+.doc h4{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--navy);margin:20px 0 6px;text-transform:uppercase;letter-spacing:.08em}
+.doc ol,.doc ul{margin:0;padding-left:20px;display:grid;gap:3px}
+.doc .kv{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:8px;color:var(--muted)}
+.doc .kv b{color:var(--ink)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:#fff}
+table{border-collapse:collapse;width:100%;min-width:560px}
+th{background:var(--navy);color:#fff;text-align:left;font-weight:600;font-size:11.5px;padding:10px 14px;letter-spacing:.02em}
+td{padding:9px 14px;border-top:1px solid var(--paper-3);vertical-align:top}
+tr:nth-child(even) td{background:#F8F6F2}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tfoot td{background:var(--ink)!important;color:#fff;font-weight:600}
+.pill{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--paper-2);color:var(--muted);white-space:nowrap}
+.pill.hi{background:#F4E3E6;color:var(--maroon)}
+.pill.ok{background:#E3E8F2;color:var(--navy)}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.kpi .k{padding:7px 14px;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--navy)}
+.kpi.m .k{background:var(--maroon)} .kpi.b .k{background:var(--ink)}
+.kpi .v{padding:12px 14px 2px;font-family:var(--serif);font-size:clamp(22px,2.6vw,30px);color:var(--ink);font-variant-numeric:tabular-nums}
+.kpi .s{padding:0 14px 12px;font-size:11.5px;color:var(--muted)}
+@media (max-width:760px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.insight{margin-top:12px;background:var(--navy);color:#fff;border-radius:10px;padding:16px 20px;font-weight:600}
+.bars{display:grid;gap:12px}
+.bar-row{display:grid;grid-template-columns:180px minmax(0,1fr);gap:16px;align-items:center}
+.bar-row .lbl{font-weight:600;color:var(--ink)}
+.bar-track{display:grid;gap:3px}
+.bar{height:11px;border-radius:0 3px 3px 0;min-width:2px;transform-origin:left;animation:grow 1s var(--ease) both}
+@keyframes grow{from{transform:scaleX(0)}}
+.bar.a{background:var(--navy);opacity:.4}.bar.b{background:var(--maroon)}
+.bar-vals{display:flex;gap:14px;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;flex-wrap:wrap}
+.bar-vals .over{color:var(--maroon);font-weight:700}
+.legend{display:flex;gap:18px;font-size:11.5px;color:var(--muted);margin-bottom:12px;flex-wrap:wrap}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+@media (max-width:640px){.bar-row{grid-template-columns:1fr;gap:4px}}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px}
+@media (max-width:860px){.split{grid-template-columns:1fr}}
+.stack{display:flex;height:14px;border-radius:4px;overflow:hidden;margin:0 0 14px}
+.tl{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}
+.tl li{position:relative;padding:0 0 16px 20px}
+.tl li::before{content:"";position:absolute;left:-6px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--navy)}
+.tl li.ev::before{background:var(--maroon)}
+.tl .when{font-family:var(--mono);font-size:10.5px;color:var(--maroon)}
+
+/* ---------- ABOUT ---------- */
+.about-photo{position:relative}
+.about-photo .frame-a{border-radius:200px 200px 12px 12px;overflow:hidden;box-shadow:0 30px 50px -28px rgba(14,21,38,.7);background:var(--navy)}
+.about-photo img{aspect-ratio:3/4;object-fit:cover;object-position:50% 20%;width:100%}
+.about-photo .stamp{position:absolute;right:-10px;bottom:30px;background:var(--maroon);color:#fff;border-radius:50%;width:112px;height:112px;display:grid;place-items:center;text-align:center;font-family:var(--serif);font-size:15px;line-height:1.15;transform:rotate(8deg);box-shadow:0 12px 24px -12px rgba(0,0,0,.6)}
+.about-photo .stamp b{display:block;font-size:30px;font-weight:500}
+.signature{font-family:var(--script);font-size:44px;color:var(--navy);line-height:1;margin-top:18px}
+.exp{list-style:none;margin:0;padding:0}
+.exp>li{display:grid;grid-template-columns:130px minmax(0,1fr);gap:20px;padding:18px 0;border-top:1px solid var(--line)}
+.exp .yr{font-family:var(--mono);font-size:10.5px;color:var(--maroon);letter-spacing:.08em;padding-top:4px}
+.exp h3{font-size:21px}
+.exp .org{color:var(--muted);margin:2px 0 6px}
+.exp ul{margin:0;padding-left:18px;display:grid;gap:3px}
+@media (max-width:640px){.exp>li{grid-template-columns:1fr;gap:4px}}
+.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:860px){.cards3{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.card h3{font-size:22px;margin-bottom:10px}
+.card ul{margin:0;padding:0;list-style:none;display:grid}
+.card li{padding:7px 0;border-top:1px solid var(--paper-3)}
+.card li:first-child{border-top:0}
+.card li small{color:var(--muted);display:block}
+
+/* ---------- SETUP ---------- */
+.checklist{display:grid;border-top:1px solid var(--line)}
+.check{display:grid;grid-template-columns:28px 160px minmax(0,1fr);gap:14px;align-items:center;padding:16px 0;border-bottom:1px solid var(--line)}
+.check .box{width:20px;height:20px;border-radius:4px;background:var(--navy);display:grid;place-items:center;color:#fff;font-size:12px}
+.check b{color:var(--ink);font-weight:600}
+@media (max-width:640px){.check{grid-template-columns:28px minmax(0,1fr)}.check span:last-child{grid-column:2}}
+.tz{background:var(--navy);color:var(--on-dark);border-radius:14px;padding:clamp(20px,3vw,30px)}
+.tz h3{color:#fff;font-size:26px}
+.clocks{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+.clocks div{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 14px}
+.clocks .t{font-family:var(--serif);font-size:30px;color:#fff;font-variant-numeric:tabular-nums;line-height:1.1}
+.clocks .mono{color:var(--on-dark-2);font-size:9.5px}
+.day24{position:relative;height:30px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:6px}
+.day24 .seg{position:absolute;top:0;bottom:0;background:var(--maroon)}
+.day24 .ticks{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 calc(100%/24 - 1px),rgba(255,255,255,.12) calc(100%/24 - 1px) calc(100%/24))}
+.day24-l{display:flex;justify-content:space-between;color:var(--on-dark-2);font-family:var(--mono);font-size:9.5px;margin-top:6px}
+.tz p{color:var(--on-dark)}
+.tz select{font:inherit;background:#fff;color:var(--ink);border:0;border-radius:6px;padding:7px 8px;margin:6px 0 0;display:block;width:100%;max-width:340px}
+
+/* ---------- WRITE ---------- */
+.write{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(24px,4vw,56px);align-items:start}
+@media (max-width:900px){.write{grid-template-columns:1fr}}
+.need{display:grid;gap:10px;margin-top:22px}
+.need div{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start}
+.need i{font-style:normal;font-family:var(--serif);font-size:22px;color:var(--maroon);line-height:1}
+.need b{color:var(--ink)}
+.mini{display:flex;align-items:center;gap:14px;margin-top:26px;padding-top:18px;border-top:1px solid var(--line)}
+.mini img{width:62px;height:62px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 3px #fff,0 0 0 4px var(--line)}
+.mini .signature{font-size:32px;margin:0}
+.alt{display:grid;gap:8px;margin-top:18px}
+.alt div{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.copy{font-size:11px;font-weight:600;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:6px;padding:5px 10px;cursor:pointer}
+.copy-inline{font-size:12px;font-weight:600;background:none;border:none;color:var(--muted);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0}
+.copy-inline:hover{color:var(--ink)}
+.compose{background:#fff;border-radius:14px;box-shadow:0 30px 60px -30px rgba(14,21,38,.6),0 0 0 1px var(--line);overflow:hidden}
+.cbar{background:var(--navy);color:#fff;display:flex;justify-content:space-between;align-items:center;padding:12px 18px}
+.cbar b{font-weight:600}
+.cbar .dots{display:flex;gap:6px}.cbar .dots span{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.3)}
+.field{display:grid;grid-template-columns:86px minmax(0,1fr);align-items:center;border-bottom:1px solid var(--paper-3);padding:0 18px}
+.field label{color:var(--muted);font-size:12px}
+.field input,.field textarea{font:inherit;font-size:10pt;border:0;outline:none;padding:13px 0;background:transparent;color:var(--ink);width:100%}
+.field input:focus,.field textarea:focus{background:linear-gradient(transparent 92%,rgba(122,31,43,.18) 92%)}
+.field.to .v{padding:13px 0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.field.to .chip{display:inline-flex;align-items:center;gap:8px;background:var(--paper-2);border-radius:999px;padding:3px 12px 3px 3px;font-weight:600;color:var(--ink)}
+.field.to .chip img{width:24px;height:24px;border-radius:50%;object-fit:cover}
+.field.msg{grid-template-columns:1fr;padding:6px 18px}
+.field.msg textarea{min-height:190px;resize:vertical;line-height:1.7}
+.attach{padding:14px 18px;border-bottom:1px solid var(--paper-3)}
+.drop{display:flex;align-items:center;justify-content:center;gap:10px;border:1.5px dashed var(--line);border-radius:10px;padding:14px;color:var(--muted);cursor:pointer;transition:border-color .25s,background .25s;text-align:center}
+.drop:hover,.drop.over{border-color:var(--maroon);background:#FBF3F4}
+.drop input{position:absolute;width:1px;height:1px;opacity:0}
+.files{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.file{display:inline-flex;align-items:center;gap:8px;background:var(--paper-2);border-radius:8px;padding:6px 8px 6px 12px;font-size:12px}
+.file button{border:0;background:transparent;cursor:pointer;color:var(--muted);font-size:14px;line-height:1}
+.cfoot{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 18px;flex-wrap:wrap}
+.err{color:var(--maroon);font-weight:600;font-size:12px}
+dialog.pop{border:0;border-radius:16px;padding:0;max-width:min(460px,92vw);box-shadow:0 40px 80px -30px rgba(0,0,0,.6)}
+dialog.pop::backdrop{background:rgba(8,12,22,.6);backdrop-filter:blur(3px)}
+.pop-in{padding:28px 28px 22px;text-align:center}
+.pop-in .env{width:64px;height:64px;margin:0 auto 12px;border-radius:50%;background:var(--navy);display:grid;place-items:center;color:#fff;font-size:26px;animation:rise .6s var(--ease) both}
+.pop-in h3{font-size:26px;margin-bottom:8px}
+.pop-in p{color:var(--text)}
+.pop-in .row{justify-content:center;margin-top:18px}
+dialog.lb{border:0;padding:0;background:transparent;max-width:min(1400px,96vw);max-height:92vh}
+dialog.lb::backdrop{background:rgba(8,10,16,.85)}
+dialog.lb img{max-height:84vh;width:auto;margin:0 auto;border-radius:8px}
+dialog.lb .lbbar{display:flex;justify-content:space-between;align-items:center;gap:12px;color:#fff;padding:10px 2px}
+dialog.lb button{font-weight:700;background:#fff;color:var(--ink);border:0;border-radius:6px;padding:6px 12px;cursor:pointer}
+
+/* colophon footer */
+.colophon{max-width:1240px;margin:0 auto;padding:36px clamp(16px,3vw,32px) 44px;color:var(--on-dark-2)}
+.orn{display:flex;align-items:center;gap:18px;color:var(--rose)}
+.orn::before,.orn::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(212,138,149,.45),transparent)}
+.orn span{font-family:var(--serif);font-size:22px;color:var(--on-dark);letter-spacing:.06em}
+.colo-grid{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:32px;margin-top:28px;align-items:start}
+.colo-grid .sgn{font-family:var(--script);font-size:46px;color:var(--on-dark);line-height:1}
+.colo-grid h4{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--rose);font-weight:500;margin-bottom:10px}
+.colo-grid a{color:var(--on-dark);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .25s}
+.colo-grid a:hover{border-color:var(--rose)}
+.colo-grid ul{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.fine{margin-top:30px;padding-top:18px;border-top:1px solid rgba(255,255,255,.1);display:grid;grid-template-columns:1fr 1fr;gap:10px 32px;font-size:11px;font-style:italic;line-height:1.7}
+.copy-line{margin-top:18px;text-align:center;font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(163,172,192,.7)}
+@media (max-width:820px){.colo-grid,.fine{grid-template-columns:1fr}.colophon{padding-bottom:110px}}
+/* crossfade */
+.xfade{position:relative}
+.xfade img{position:absolute;inset:0;height:100%}
+.xfade img:first-child{position:relative}
+.xfade img.b{animation:xf 14s ease-in-out infinite}
+@keyframes xf{0%,38%{opacity:0}50%,88%{opacity:1}100%{opacity:0}}
+/* experience rich rows */
+.exp>li{grid-template-columns:120px minmax(0,1fr) 220px;align-items:start;transition:background .3s}
+.exp>li:hover{background:linear-gradient(90deg,transparent,rgba(31,42,68,.035))}
+.xstat{border-left:3px solid var(--maroon);padding:6px 0 6px 16px;display:grid;gap:10px}
+.xstat .n{font-family:var(--serif);font-size:34px;line-height:1;color:var(--ink)}
+.xstat small{display:block;color:var(--muted);font-size:11px;line-height:1.4;margin-top:3px}
+.xstat .proofthumb{margin-top:4px;border:1px solid var(--line);border-radius:6px;overflow:hidden;cursor:zoom-in;padding:0;background:#fff;width:110px;display:block}
+.xstat .proofthumb img{aspect-ratio:3/4;object-fit:cover;object-position:top}
+.exp .role-ic{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;background:var(--paper-2);color:var(--navy);padding:2px 8px;border-radius:4px;margin-top:8px}
+@media (max-width:860px){.exp>li{grid-template-columns:1fr}.xstat{grid-template-columns:auto auto;justify-content:start;gap:24px}}
+/* certificates */
+.wall{list-style:none;margin:28px 0 0;padding:0;border-top:1px solid var(--line)}
+.wall li{display:grid;grid-template-columns:110px minmax(0,1fr) auto;gap:20px;align-items:center;padding:18px 0;border-bottom:1px solid var(--line)}
+.wall .kind{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--maroon)}
+.wall b{font-family:var(--serif);font-size:20px;font-weight:400;color:var(--ink);display:block;line-height:1.2}
+.wall small{color:var(--muted);display:block;margin-top:2px}
+@media (max-width:700px){.wall li{grid-template-columns:1fr;gap:8px}}
+.access{display:inline-flex;align-items:center;gap:8px;font:600 12px var(--sans);color:var(--navy);background:transparent;border:1px solid var(--navy);border-radius:999px;padding:9px 16px;cursor:pointer;white-space:nowrap;justify-self:start;transition:background .3s var(--ease),color .3s var(--ease)}
+.access:hover,.access:focus-visible{background:var(--navy);color:#fff}
+.access span{transition:transform .3s var(--ease)}
+.access:hover span{transform:translate(2px,-2px)}
+.recordcard{display:grid;gap:6px;justify-items:start;background:#fff;border:1px solid var(--line);border-radius:10px;padding:22px}
+.recordcard b{font-family:var(--serif);font-size:22px;font-weight:400;color:var(--ink)}
+.recordcard small{color:var(--muted);margin-bottom:10px}
+dialog.lb .lbnav{display:flex;gap:6px}
+dialog.lb button[disabled]{opacity:.35;cursor:default}
+.certf{background:#fff;padding:14px;border-radius:4px;box-shadow:0 0 0 1px var(--line),0 24px 40px -26px rgba(14,21,38,.7);cursor:zoom-in;border:0;text-align:left;display:grid;gap:12px;transition:transform .5s var(--ease)}
+.certf:hover{transform:translateY(-4px) rotate(-.3deg)}
+.certf .mat{background:var(--paper-2);padding:10px;display:grid;place-items:center;aspect-ratio:4/3}
+.certf .mat img{max-height:100%;width:auto;box-shadow:0 6px 14px -8px rgba(0,0,0,.4)}
+.certf b{font-family:var(--serif);font-size:18px;font-weight:400;color:var(--ink);line-height:1.2}
+.certf small{color:var(--muted);display:block}
+.alison{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:26px;align-items:start}
+@media (max-width:860px){.alison{grid-template-columns:1fr}}
+.courses{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.course{display:grid;grid-template-columns:minmax(0,1fr) 140px 64px;gap:14px;align-items:center;padding:11px 18px;border-top:1px solid var(--paper-3)}
+.course:first-child{border-top:0}
+.course b{color:var(--ink);font-weight:600}
+.course small{display:block;color:var(--muted);font-size:11px}
+.meter{height:6px;border-radius:3px;background:var(--paper-2);overflow:hidden}
+.meter i{display:block;height:100%;background:linear-gradient(90deg,var(--navy),var(--maroon));transform-origin:left;animation:grow 1.2s var(--ease) both}
+.course .sc{font-family:var(--serif);font-size:20px;color:var(--ink);text-align:right}
+.courses .sum{display:flex;justify-content:space-between;gap:12px;padding:12px 18px;background:var(--navy);color:#fff;flex-wrap:wrap}
+.pages{display:flex;gap:10px}
+.pages button{flex:1;padding:0;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff;cursor:zoom-in;transition:transform .4s var(--ease)}
+.pages button:hover{transform:translateY(-3px)}
+.pages img{aspect-ratio:210/297;object-fit:cover;object-position:top}
+@media (max-width:560px){.course{grid-template-columns:minmax(0,1fr) 54px}.course .meter{display:none}}
+/* drive paperclip */
+.clipto{position:absolute;top:-34px;right:-6px;display:flex;flex-direction:column;align-items:center;text-decoration:none;color:var(--muted);z-index:3}
+.clipto svg{width:26px;height:64px;transition:transform .45s var(--ease)}
+.clipto span{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;opacity:0;transform:translateY(-4px);transition:opacity .3s,transform .3s;white-space:nowrap}
+.clipto:hover svg,.clipto:focus-visible svg{transform:translateY(4px) rotate(-6deg)}
+.clipto:hover span,.clipto:focus-visible span{opacity:1;transform:none;color:var(--maroon)}
+.phead{position:relative}
+/* cover */
+.sheet.is-cover{background:radial-gradient(900px 500px at 80% 0%,#243152,transparent 60%),linear-gradient(160deg,#18223A,#0F1729);color:var(--on-dark)}
+.sheet.is-cover::before{background:radial-gradient(circle at 21px 50%,#0A0F1C 0 6px,rgba(255,255,255,.08) 6.5px,transparent 8px) 0 0/42px 64px repeat-y,linear-gradient(90deg,#0C1324,transparent);border-right:1px solid rgba(255,255,255,.06)}
+.cover{position:relative;min-height:70vh;display:grid;align-content:center;gap:0}
+.ribbon{position:absolute;top:calc(-1 * clamp(22px,3.4vw,44px));right:clamp(-14px,-1vw,0px);width:30px;height:150px;background:var(--maroon);clip-path:polygon(0 0,100% 0,100% 100%,50% 86%,0 100%);box-shadow:inset -6px 0 8px -6px rgba(0,0,0,.4)}
+.emboss{font-family:var(--serif);color:#E9ECF2;text-shadow:0 1px 0 rgba(255,255,255,.08),0 -1px 0 rgba(0,0,0,.6)}
+.cover .ed{font-family:var(--mono);font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--rose)}
+.cover h1{padding-right:56px;font-size:clamp(44px,7.4vw,96px);color:#fff;line-height:.98;margin:18px 0 8px}
+.cover h1 em{font-style:italic;color:var(--rose)}
+.cover .sub{color:var(--on-dark-2);font-size:11.5pt;max-width:52ch}
+.cover .gold{height:1px;width:120px;background:linear-gradient(90deg,var(--rose),transparent);margin:26px 0}
+.editions{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(24px,4vw,48px);margin-top:clamp(36px,5vw,56px);align-items:center}
+@media (max-width:900px){.editions{grid-template-columns:1fr}}
+.browser{border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 30px 60px -30px rgba(0,0,0,.8);transform:rotate(-1.5deg);transition:transform .6s var(--ease)}
+.browser:hover{transform:rotate(0)}
+.bbar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#E9ECF2}
+.bbar i{width:9px;height:9px;border-radius:50%;background:#C9CED8}
+.bbar span{flex:1;margin-left:8px;background:#fff;border-radius:5px;padding:3px 10px;font-family:var(--mono);font-size:10px;color:#556}
+.browser .shot{position:relative}
+.browser .shot img{filter:saturate(.85)}
+.stampx{position:absolute;right:16px;bottom:16px;border:2px solid var(--rose);color:var(--rose);font-family:var(--mono);font-size:10px;letter-spacing:.2em;padding:6px 10px;transform:rotate(-8deg);background:rgba(14,21,38,.72);border-radius:4px}
+.changes{display:grid;gap:12px}
+.changes li{list-style:none;display:grid;grid-template-columns:22px 1fr;gap:10px;color:var(--on-dark)}
+.changes li::before{content:"→";color:var(--rose)}
+.changes{margin:0;padding:0}
+.cover .btn-open{background:var(--paper);color:var(--ink);font-size:13px;padding:15px 26px}
+.cover .btn-open:hover{transform:translateY(-2px);box-shadow:0 14px 30px -12px rgba(0,0,0,.7)}
+.cover .lnk{color:var(--on-dark);text-decoration:none;border-bottom:1px solid rgba(212,138,149,.6);padding-bottom:2px}
+.cover .lnk:hover{border-color:var(--rose)}
+
+
+/* page-turn transitions */
+::view-transition-old(sheet){animation:turn-out .45s var(--ease) both}
+::view-transition-new(sheet){animation:turn-in .6s var(--ease) both}
+@keyframes turn-out{to{opacity:0;transform:translateX(-3%) rotate(-.4deg);filter:blur(1px)}}
+@keyframes turn-in{from{opacity:0;transform:translateX(4%) rotate(.4deg)}}
+.rev ::view-transition-old(sheet){animation-name:turn-out-r}
+.rev ::view-transition-new(sheet){animation-name:turn-in-r}
+@keyframes turn-out-r{to{opacity:0;transform:translateX(3%) rotate(.4deg);filter:blur(1px)}}
+@keyframes turn-in-r{from{opacity:0;transform:translateX(-4%) rotate(-.4deg)}}
+.fade-in{animation:rise .55s var(--ease) both}
+.reveal{opacity:1}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}::view-transition-old(sheet),::view-transition-new(sheet){animation:none!important}html{scroll-behavior:auto}}
+</style>
+
+<header class="topbar">
+  <a class="sig" href="#offer">Jonah Kris <i>Llantino</i></a>
+  <span class="today mono" id="today">Planner · 2026</span>
+  <a class="pill-btn" href="#write">Write to Jonah <span aria-hidden="true">→</span></a>
+</header>
+
+<div class="planner">
+  <article class="sheet"><div class="content" id="app"></div></article>
+  <nav class="tabs" aria-label="Planner sections">
+    <a class="tab" data-c="maroon" href="#offer" data-r="offer">Offer</a>
+    <a class="tab" data-c="navy" href="#work" data-r="work">Work</a>
+    <a class="tab" data-c="ink" href="#about" data-r="about">About</a>
+    <a class="tab" data-c="navy" href="#setup" data-r="setup">Setup</a>
+    <a class="tab" data-c="maroon" href="#write" data-r="write">Write</a>
+    <a class="tab" data-c="ink" href="#cover" data-r="cover">Then &amp; now</a>
+  </nav>
+</div>
+
+<footer class="colophon">
+  <div class="orn"><span>J · K · L</span></div>
+  <div class="colo-grid">
+   <div><div class="sgn">Jonah</div><p style="margin-top:8px">Virtual Executive Assistant<br>Dasmariñas, Cavite, Philippines · PHT (UTC+8)</p></div>
+   <div><h4>The planner</h4><ul><li><a href="#offer">Offer</a></li><li><a href="#work">Work</a></li><li><a href="#about">About</a></li><li><a href="#setup">Setup</a></li><li><a href="#write">Write to Jonah</a></li></ul></div>
+   <div><h4>Elsewhere</h4><ul><li><a href="https://www.linkedin.com/in/jonah-llantino/" target="_blank" rel="noopener">LinkedIn ↗</a></li><li><a href="https://jonah-llantino.vercel.app/" target="_blank" rel="noopener">First edition of this site ↗</a></li><li><a href="https://docs.google.com/document/d/1IfkVVQeQ6gYCrt0qYKp8mbYiuCZ2Nw5_K1tqBVKz_Ao/edit?usp=sharing" target="_blank" rel="noopener" title="The original portfolio files">The archive ↗</a></li><li style="margin-top:6px">jonahkris.llantino.va@gmail.com</li></ul></div>
+  </div>
+  <div class="fine"><p>Projects 01–05 are practice projects for a simulated client, Cris Manalo. Project 06 uses real, anonymized event records. Project 07 is a practice project for a simulated startup founder. Names, organizations, and other confidential details were changed for privacy.</p><p>Some project files and this website were built with the help of Claude (an AI assistant by Anthropic) as a productivity tool. The work, figures, and experience shown are my own.</p></div>
+  <div class="copy-line">© 2026 · Jonah Kris V. Llantino · Held together</div>
+</footer>
+
+<dialog class="lb" id="lb" aria-label="Image viewer"><div class="lbbar"><span id="lbcap"></span><span class="lbnav"><button type="button" id="lbprev" aria-label="Previous page">←</button><button type="button" id="lbnext" aria-label="Next page">→</button><button type="button" id="lbclose">Close</button></span></div><img id="lbimg" alt=""></dialog>
+<dialog class="pop" id="pop" aria-labelledby="popt"><div class="pop-in"><div class="env" aria-hidden="true">✉</div><h3 id="popt">Almost there.</h3><p id="popmsg"></p><div class="row"><button class="btn btn-line" type="button" id="popcopy">Copy my message</button><button class="btn btn-dark" type="button" id="popclose">Done</button></div></div></dialog>
+
+<script>
+const EMAIL="jonahkris.llantino.va@gmail.com";
+const $=s=>document.querySelector(s);
+const peso=(n,d=0)=>"₱"+Number(n).toLocaleString("en-PH",{minimumFractionDigits:d,maximumFractionDigits:d});
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ---------------- data ---------------- */
+const SERV=[
+ {id:"cal",day:0,start:0,len:3,c:"navy",hr:"8:00–10:30",t:"Calendar management",p:"p1",tools:"Google Calendar",
+  d:"Weekly scheduling around meetings, client appointments, recurring team check-ins, protected focus time, and personal commitments, with agendas drafted and the right people invited.",
+  b:["A color-coded week you can read at a glance","Focus blocks and family time protected first","Recurring meetings set up with agendas and attendees"]},
+ {id:"inbox",day:1,start:0,len:3,c:"maroon",hr:"8:00–10:30",t:"Inbox management",p:"p2",tools:"Gmail",
+  d:"A label and filter system that separates clients, vendors, finance, and team mail, surfaces what needs action, and keeps waiting replies from going quiet.",
+  b:["Nine-label system with automatic filters","Action Required and Awaiting Reply always visible","Less clutter, faster replies to the people who matter"]},
+ {id:"meet",day:2,start:1,len:3,c:"ink",hr:"9:00–11:30",t:"Meetings & action items",p:"p3",tools:"Google Docs, Sheets, Gmail",
+  d:"An agenda before, notes during, and a tracked action list with owners and deadlines after, closed out with a follow-up email so nobody has to ask what was decided.",
+  b:["Agenda with attendees sent ahead","Notes that capture decisions, not just talk","Owner-and-deadline tracker plus a follow-up email"]},
+ {id:"travel",day:3,start:0,len:3,c:"slate",hr:"8:00–10:30",t:"Travel planning",p:"p4",tools:"Google Sheets, Docs",
+  d:"Flights, hotels, and ground transport compared side by side, then a day-by-day itinerary with buffers, meals, booking status, and estimated costs in one place.",
+  b:["Options compared before anything is booked","Buffers between every move","Costs tracked against your trip budget"]},
+ {id:"event",day:4,start:0,len:3,c:"maroon",hr:"8:00–10:30",t:"Events & budgets",p:"p6",tools:"Excel, Google Sheets",
+  d:"Schedules, volunteer assignments, and program flow for events, with the budget tracked down to the receipt and a contingency reserve set aside before anything is spent.",
+  b:["Coordinated a real 2-day event for 152 participants","Managed a ₱160,000 budget to the receipt","Discrepancies flagged for a decision, never hidden"]},
+ {id:"records",day:4,start:5,len:3,c:"navy",hr:"1:00–3:30",t:"Workspace & records",p:"p5",tools:"Notion, Google Drive",
+  d:"A central Notion dashboard for priorities, tasks, and follow-ups, plus confidential records kept organized and accurate, a habit from my clinical psychology internship.",
+  b:["One command center for the whole week","Confidential records handled with care","Clean documentation you can find in seconds"]},
+ {id:"fundraise",day:2,start:5,len:3,c:"maroon",hr:"1:00–3:30",t:"Fundraising support",p:"p7",tools:"Google Sheets, Gmail, Google Drive",
+  d:"An investor pipeline kept current across outreach, calls, and follow-up, data room access released in the right order, and a short weekly summary so you walk into every partner meeting already knowing where things stand.",
+  b:["One pipeline tracker instead of five email threads","Data room access controlled by stage, not guesswork","A weekly summary before you need to ask for one"]}
+];
+const P=[
+ {id:"p1",n:"01",title:"Executive Calendar Management",type:"sim",c:"navy",tools:["Google Calendar"],client:"Cris Manalo · owner, 4J's Catering (simulated)",img:"img/weekly-calendar-overview.webp",
+  one:"A full week for a busy owner-teacher, from meetings and client work to focus blocks and protected family time.",
+  sum:"Organized a simulated executive calendar around business meetings, recurring team activities, client appointments, focus time, personal commitments, and other competing priorities.",
+  body:["Created and organized a <strong>simulated weekly calendar for Cris Manalo</strong>, a business owner and part-time elementary teacher, to demonstrate Executive Assistant calendar management skills.","The project involved organizing business meetings, recurring team meetings, client appointments, focus blocks, operational activities, personal commitments, family time, meals, and reminders while balancing competing priorities.","I also created meeting agendas, identified appropriate attendees, scheduled recurring meetings, protected executive focus time, and organized the calendar around competing business and personal priorities."]},
+ {id:"p2",n:"02",title:"Executive Email & Inbox Management",type:"sim",c:"maroon",tools:["Gmail"],client:"Cris Manalo · owner, 4J's Catering (simulated)",img:"img/organized-gmail-inbox.webp",
+  one:"A nine-label Gmail system with filters that sorts every message by who it's from and what it needs.",
+  sum:"Organized a simulated executive Gmail inbox using labels and filters to categorize communications, prioritize action items, manage follow-ups, and reduce inbox clutter.",
+  body:["Created a <strong>simulated Gmail inbox for Cris Manalo</strong>, a business owner and part-time elementary teacher, to demonstrate Executive Assistant email management and organization skills.","The project involved organizing client, team, vendor, finance, executive, action-required, follow-up, reference, and newsletter emails using labels and Gmail filters.","I also created an organized inbox system to prioritize important communications, separate emails by category, identify messages requiring action or follow-up, and reduce inbox clutter through automated filtering."]},
+ {id:"p3",n:"03",title:"Executive Meeting & Action Item Management",type:"sim",c:"ink",tools:["Google Docs","Google Sheets","Gmail"],client:"Cris Manalo · owner, 4J's Catering (simulated)",
+  one:"One weekly operations meeting, end to end: agenda, notes, owner-and-deadline tracker, and follow-up email.",
+  sum:"Prepared a simulated executive meeting agenda, documented meeting notes, tracked action items and deadlines, and created a follow-up email to keep responsibilities and next steps clear.",
+  body:["Created a <strong>simulated weekly operations meeting for Cris Manalo</strong>, a business owner and part-time elementary teacher, to demonstrate Executive Assistant meeting coordination and follow-up skills.","The project involved preparing a meeting agenda, organizing discussion points, documenting meeting notes, identifying decisions and action items, and tracking responsibilities and deadlines.","I also prepared a follow-up email to summarize key takeaways and ensure assigned tasks were clearly communicated."]},
+ {id:"p4",n:"04",title:"Executive Travel Planning",type:"sim",c:"navy",tools:["Google Sheets","Google Docs"],client:"Cris Manalo · owner, 4J's Catering (simulated)",
+  one:"A 3-day Cebu business trip planned around supplier meetings, buffer time, and a ₱20,000 budget.",
+  sum:"Planned a simulated executive business trip by comparing travel options, organizing transportation and hotel details, and creating a practical day-by-day itinerary with estimated expenses and buffer time.",
+  body:["Created a <strong>simulated business trip itinerary for Cris Manalo</strong>, a business owner and part-time elementary teacher, to demonstrate Executive Assistant travel planning and organization skills.","The project involved researching and comparing travel options, organizing flight, hotel, transportation, and meeting details, and creating a clear day-by-day itinerary around the executive’s schedule.","I also organized key travel information and estimated trip expenses to make the itinerary easy to review and use for trip planning."]},
+ {id:"p5",n:"05",title:"Notion Executive Command Center",type:"sim",c:"maroon",tools:["Notion","Google Calendar","Google Docs"],client:"Cris Manalo · owner, 4J's Catering (simulated)",img:"img/04-portfolio-projects.webp",
+  one:"One Notion dashboard that ties together priorities, the calendar, meeting follow-ups, and every project.",
+  sum:"Created a simulated Notion workspace for Cris Manalo to organize executive priorities, tasks, calendar events, meeting follow-ups, and portfolio projects in one centralized dashboard.",
+  body:["Created a <strong>simulated Notion workspace for Cris Manalo</strong>, a business owner and part-time elementary teacher, to demonstrate Executive Assistant workspace organization and task management skills.","The project involved building a central dashboard that brings the executive’s priority tasks, calendar, meeting follow-ups, and portfolio projects together in one place.","I also linked the workspace to the other projects in this portfolio, including the Google Calendar, meeting notes, and project folders, so the executive can move between tools from a single page."]},
+ {id:"p6",n:"06",title:"Event Budget & Project Coordination",type:"real",c:"ink",tools:["Microsoft Excel","Microsoft Word","Google Docs","Claude (AI)"],client:"Youth leadership organization (anonymized)",
+  one:"Real records from a 152-participant youth leadership event, turned into a balanced ₱160,000 budget model.",
+  sum:"Organized real financial records from a youth leadership event into a balanced ₱160,000 budget model, with a contingency reserve, an executive dashboard, income matching across payment channels, and a backward-counted project timeline.",
+  body:["As <strong>Coordinator and Finance Head</strong> of a real 2-day youth leadership event for 152 participants, I organized the event’s financial records into a balanced budget model and project roadmap.","The project involved turning handwritten notebook ledgers and a sponsorship tracker into an organized workbook: setting a ₱160,000 budget cap with a 10% contingency reserve, grouping expenses into categories, matching income from cash, e-wallet, and bank deposits, and building a timeline that counts backward from event day.","I also flagged records that didn't match so they could be reviewed, instead of changing them myself, and prepared a client-ready project brief that explains the workbook and its results."]},
+ {id:"p7",n:"07",title:"Startup Fundraising & Investor Coordination",type:"sim",c:"maroon",tools:["Google Sheets","Gmail","Google Calendar","Google Drive"],client:"Mika Reyes · founder, Loopline (simulated)",
+  one:"A seed-round investor pipeline kept moving, with warm intros logged and data room access released stage by stage.",
+  sum:"Built and maintained a simulated investor pipeline for a seed-stage startup's fundraising round, covering outreach, scheduling, and follow-up, with staged data room access and a weekly summary so the founder always knew where things stood.",
+  body:["Created a <strong>simulated fundraising support project for Mika Reyes</strong>, the founder of Loopline, an early-stage startup, to demonstrate Executive Assistant support for a fast-moving investor round.","The project involved building an investor pipeline tracker across outreach, intro calls, pitch meetings, and due diligence, scheduling calls around the founder's product and customer commitments, drafting warm intro requests and follow-ups, and releasing data room materials in stages as each investor moved forward.","I also put together a short weekly fundraising summary so the founder could walk into partner meetings already knowing where every conversation stood, instead of piecing it together from old email threads."]}
+];
+const DRIVE={"p1": "1hjeN3ycnmjtx96M6JbQR0VHAry03PyJI", "p2": "1r30HJa1mGfjBJkWotFas15b4M5FXcje5", "p3": "1ybZ7zgaWf1ZJ13ZGU2yETil0vGDr653t", "p4": "1Ux9c9TtMORY0dYn77C9rD_FislxIQCYH", "p5": "1tea9SMS5_MySqA54dOgQP6N14d3CdkWN", "p6": "1lmuAAGRBcjiqd1jg-UtKcaKRIAgVfXla", "p7": "1iBOZP557w2KUThY-dtjvv6t7wQPyME4c"};
+const ROUTES=["offer","work","p1","p2","p3","p4","p5","p6","p7","about","setup","write","cover"];
+
+/* ---------------- helpers ---------------- */
+const fig=(src,cap)=>`<button type="button" class="frame" data-zoom="${src}" data-cap="${esc(cap)}"><img src="${src}" alt="${esc(cap)}" loading="lazy"><span class="cap">${cap}</span></button>`;
+const head=(l,r)=>`<div class="pagehead mono"><span>${l}</span><span>${r}</span></div>`;
+function weekLabel(){const d=new Date();const s=new Date(d.getFullYear(),0,1);const w=Math.ceil(((d-s)/864e5+s.getDay()+1)/7);return `Week ${w} · ${d.toLocaleDateString("en-US",{month:"long",year:"numeric"})}`}
+
+/* ---------------- COVER ---------------- */
+function cover(){
+ return `<section class="cover">
+  <span class="ribbon" aria-hidden="true"></span>
+  <span class="ed">The Planner · Second edition · 2026</span>
+  <h1 class="emboss">Jonah Kris <em>Llantino</em></h1>
+  <p class="sub">Virtual Executive Assistant. Calendar, inbox, meetings, travel, and event budgets, held together from Cavite, Philippines, on US, UK, and AU hours.</p>
+  <div class="gold"></div>
+  <div class="row"><a class="btn btn-open" href="#offer">See the new edition <span aria-hidden="true">→</span></a><a class="btn btn-line" style="color:#fff;border-color:rgba(255,255,255,.3)" href="#write">Write to Jonah</a></div>
+  <div class="editions">
+   <a class="browser" href="https://jonah-llantino.vercel.app/" target="_blank" rel="noopener" aria-label="Visit the first edition of my website">
+    <div class="bbar"><i></i><i></i><i></i><span>jonah-llantino.vercel.app</span></div>
+    <div class="shot"><img src="img/old-site-hero.webp" alt="The first edition of Jonah's website" loading="lazy"><span class="stampx">FIRST EDITION</span></div>
+   </a>
+   <div>
+    <span class="ed" style="letter-spacing:.2em">Why a second edition?</span>
+    <h2 class="emboss" style="font-size:clamp(26px,3vw,36px);margin:10px 0 16px;color:#fff">I built the first one. <em style="color:var(--rose)">Then I improved it.</em></h2>
+    <ul class="changes">
+     <li>One long page became a planner you move through, one tab at a time.</li>
+     <li>Every project now opens right here: screenshots, documents, itineraries, and a live budget dashboard.</li>
+     <li>A time-zone check shows exactly where your working hours land on mine.</li>
+     <li>A real event I coordinated, a ₱160,000 budget, joined the five practice projects.</li>
+    </ul>
+    <p style="margin-top:18px"><a class="lnk" href="https://jonah-llantino.vercel.app/" target="_blank" rel="noopener">Visit the first edition ↗</a></p>
+   </div>
+  </div>
+ </section>`;
+}
+
+/* ---------------- OFFER ---------------- */
+function offer(){
+ const days=["Mon","Tue","Wed","Thu","Fri"], hours=["8 AM","9","10","11","12 PM","1","2","3","4","5"];
+ const today=new Date(); const mon=new Date(today); mon.setDate(today.getDate()-((today.getDay()+6)%7));
+ const dn=i=>{const x=new Date(mon);x.setDate(mon.getDate()+i);return x.getDate()};
+ return `${head(`<b>Offer</b> · What I take off your plate`,weekLabel())}
+ <section class="hero">
+  <div>
+   <span class="eyebrow mono">Executive Assistant · Cavite, Philippines</span>
+   <h1 class="h-display">A little help goes <em>a long way.</em></h1>
+   <p class="lede" style="margin-top:22px">Hi, I’m Jonah! I handle the scheduling, the inbox, and the follow-ups, so you can focus on growing what you’re building instead of carrying it all yourself.</p>
+   <div class="row" style="margin-top:28px"><a class="btn btn-dark" href="#services" data-scroll>See my week of support <span aria-hidden="true">↓</span></a><a class="btn btn-line" href="#write">Write to Jonah</a></div>
+   <div class="chips"><span><b>Available now</b>&nbsp;for new clients</span><span><b>US, UK &amp; AU</b>&nbsp;time zones</span><span><b>Open</b>&nbsp;to graveyard shift</span></div>
+  </div>
+  <div class="portrait">
+   <span class="clip" aria-hidden="true"></span>
+   <figure class="polaroid" style="margin:0"><img src="img/photo-filipiniana.webp" alt="Portrait of Jonah Kris Llantino in a Filipiniana" width="850" height="1200"><figcaption class="cap"><span class="s">Jonah</span><span class="mono">BS Psychology · 2026</span></figcaption></figure>
+   <div class="clock-card" aria-live="off"><div class="mono"><span class="dot"></span>In the Philippines right now</div><div class="t" data-clock="Asia/Manila">--:--</div><div class="zones"><div><b>US · NY</b><span data-clock="America/New_York">--</span></div><div><b>UK</b><span data-clock="Europe/London">--</span></div><div><b>AU · SYD</b><span data-clock="Australia/Sydney">--</span></div></div></div>
+  </div>
+ </section>
+
+ <section class="sec" id="services">
+  <div class="sec-top"><h2 class="h-sec">What I take off <em>your plate</em></h2><p>Seven areas of executive support, laid out the way a business owner or founder actually spends a week. Tap any block to open it.</p></div>
+  <div class="week">
+   <div class="week-head"><div></div>${days.map((d,i)=>`<div><div class="mono" style="color:var(--muted)">${d}</div><div class="d">${dn(i)}</div></div>`).join("")}</div>
+   <div class="week-grid">
+    ${hours.map((h,i)=>`<div class="hour" style="grid-row:${i+1}">${h}</div><div class="gl" style="grid-row:${i+1}"></div>`).join("")}
+    ${days.map((_,i)=>`<div class="col-line" style="grid-column:${i+2}"></div>`).join("")}
+    ${SERV.map(s=>`<button type="button" class="evt ${s.c}" data-svc="${s.id}" aria-expanded="false" style="grid-column:${s.day+2};grid-row:${s.start+1} / span ${s.len}"><span class="eh">${s.hr}</span><span class="et">${s.t}</span></button>`).join("")}
+   </div>
+   <div class="agenda">${SERV.map(s=>`<button type="button" class="evt ${s.c}" data-svc="${s.id}" aria-expanded="false"><span class="eh">${days[s.day]} · ${s.hr}</span><span class="et">${s.t}</span></button>`).join("")}</div>
+   <div id="drawer">${drawer(SERV[0])}</div>
+  </div>
+ </section>
+
+ <section class="sec band">
+  <span class="eyebrow mono" style="color:var(--rose)">Receipts, not adjectives</span>
+  <div class="proof">
+   <div><div class="n" data-count="152">152</div><p class="l">participants coordinated across a two-day event</p></div>
+   <div><div class="n" data-count="160000" data-pre="₱" data-fmt>₱160,000</div><p class="l">event budget tracked and documented to the receipt</p></div>
+   <div><div class="n" data-count="20">20</div><p class="l">interns coordinated during my clinical internship</p></div>
+   <div><div class="n" data-count="7">7</div><p class="l">semesters on the Dean’s List</p></div>
+  </div>
+  <div class="marquee" aria-label="Tools I use"><div class="marquee-track">${[0,1].map(()=>["Google Calendar","Gmail","Google Docs","Google Sheets","Google Slides","Google Drive","Notion","Slack","Zoom","Google Meet","Viber","WhatsApp","Claude","ChatGPT","Gemini","Grammarly"].map(t=>`<span>${t}</span>`).join("")).join("")}</div></div>
+ </section>
+
+ <section class="sec twocol">
+  <h2 class="h-sec">A psychology graduate who runs on <em>systems,</em> not reminders.</h2>
+  <div style="display:grid;gap:14px">
+   <p>Psychology taught me the two things this job runs on: read the situation before you act, and document everything accurately the first time.</p>
+   <p>For three years I built the weekly schedule for a team of musicians, sound technicians, and multimedia volunteers. In 2026 I coordinated a two-day event for 152 participants and managed its ₱160,000 budget. As a clinical psychology intern I kept confidential client records and coordinated tasks for a team of 20 interns.</p>
+   <p style="font-family:var(--serif);font-style:italic;font-size:17px;color:var(--ink)">Different rooms, same job: keep the details straight, keep the schedule honest, and keep the person in charge free to think about something else.</p>
+   <div class="row" style="margin-top:6px"><a class="btn btn-line" href="#about">More about me →</a><a class="btn btn-line" href="#work">See the portfolio →</a></div>
+  </div>
+ </section>
+
+ <section class="closing">
+  <h2 class="h-sec">Tell me about <em>your week.</em></h2>
+  <p>Send your name, the email you actually check, and the tasks you want off your plate. My first reply will be useful, not a round of questions.</p>
+  <div class="cta"><a class="btn btn-maroon" href="#write">Write to Jonah →</a></div>
+ </section>`;
+}
+function drawer(s){
+ const pr=P.find(p=>p.id===s.p);
+ return `<div class="drawer drawer-in"><div><span class="mono" style="color:var(--maroon)">${["Monday","Tuesday","Wednesday","Thursday","Friday"][s.day]} · ${s.hr}</span><h3 style="margin-top:6px">${s.t}</h3><p style="margin-top:10px">${s.d}</p><ul>${s.b.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+ <div class="meta"><div><span class="mono" style="color:var(--muted)">Tools</span><b>${s.tools}</b></div><div><span class="mono" style="color:var(--muted)">See it done</span><b>Project ${pr.n} · ${pr.title}</b><span class="badge ${pr.type==="real"?"real":""}">${pr.type==="real"?"Real project":"Practice project"}</span></div><a class="btn btn-dark" href="#${pr.id}" style="justify-self:start">Open the project →</a></div></div>`;
+}
+
+/* ---------------- WORK ---------------- */
+function thumb(p){
+ if(p.img) return `<img src="${p.img}" alt="" loading="lazy">`;
+ if(p.id==="p3") return `<div class="th-doc"><span class="mono" style="color:var(--maroon)">Agenda · Mon 08 June 2026</span><b>Weekly Catering Operations Meeting</b>1. Upcoming events<br>2. Staffing &amp; team assignments<br>3. Supplies &amp; equipment<br>4. Finance &amp; payments<br>5. Executive decisions</div>`;
+ if(p.id==="p4") return `<div class="th-pass"><div><span class="mono">Boarding · Oct 19, 2026</span><div class="cities">MNL<i>✈</i>CEB</div><span class="mono">Traveler · Cris Manalo</span></div><div class="stub"><span class="mono">Budget</span><span style="font-family:var(--serif);font-size:20px">₱20k</span><span class="mono">3 days</span></div></div>`;
+ return `<div class="th-bars">${[96,80,92,98,30,40,26,32].map(w=>`<div style="width:${w}%"></div>`).join("")}</div>`;
+}
+function work(){
+ return `${head(`<b>Work</b> · Portfolio`,"Seven projects · 2026")}
+ <span class="eyebrow mono">The portfolio</span>
+ <h1 class="h-display">Seven projects. <em>See the work,</em> not a claim about it.</h1>
+ <p class="honest">A note on honesty: projects 01–05 are practice projects I built for a simulated client, Cris Manalo, a business owner and part-time elementary teacher. They are not paid client work. Project 06 is real, from an event I coordinated, with details anonymized. Project 07 is a practice project built around a simulated startup founder, to show how I'd support a fundraising round. I made them so you can see my actual output and judgment before you hire me.</p>
+ <div class="folders">${P.map(p=>`<a class="folder ${p.c}" href="#${p.id}"><span class="ftab">PROJECT ${p.n}</span><div class="fbody"><div class="fthumb">${thumb(p)}</div><div class="finfo"><h3>${p.title}</h3><p>${p.one}</p><span class="badge ${p.type==="real"?"real":""}">${p.type==="real"?"Real · anonymized":"Practice project"}</span></div></div></a>`).join("")}</div>`;
+}
+
+/* ---------------- PROJECT DETAIL WORK SECTIONS ---------------- */
+const W={};
+W.p1=()=>`<h2 class="h2s"><span class="mono">View</span>The managed week</h2>${fig("img/weekly-calendar-overview.webp","Weekly calendar overview: executive reviews, client work, teaching blocks, and protected family time")}
+<h2 class="h2s"><span class="mono">Detail</span>Inside the calendar</h2><div class="gallery">${fig("img/weekly-leadership-meeting.webp","Weekly Leadership Meeting: details, attendees, and agenda")}${fig("img/kitchen-operations-check-in.webp","Kitchen Operations Check-In: a recurring team meeting")}${fig("img/focus-work.webp","Focus Work: a protected block with no meetings")}</div>`;
+const LBL=[["01-vip-executive","01 · VIP / Executive"],["02-clients","02 · Clients"],["03-team","03 · Team"],["04-vendors","04 · Vendors"],["05-finance","05 · Finance"],["06-action-required","06 · Action Required"],["07-awaiting-reply","07 · Awaiting Reply"],["08-reference","08 · Reference"],["09-newsletters","09 · Newsletters"]];
+W.p2=()=>`<h2 class="h2s"><span class="mono">View</span>The organized inbox</h2>${fig("img/organized-gmail-inbox.webp","Organized inbox with color-coded labels. Emails show as sent by “me” because the project uses one test Gmail account.")}
+<h2 class="h2s"><span class="mono">Explore</span>The label system</h2><div class="chiptabs" role="tablist" aria-label="Gmail labels">${LBL.map((l,i)=>`<button class="ct" role="tab" type="button" aria-selected="${i===0}" data-lbl="${l[0]}" data-name="${l[1]}">${l[1]}</button>`).join("")}</div><div id="lblview">${fig("img/01-vip-executive.webp","Label 01 · VIP / Executive")}</div>`;
+const AG=[["Upcoming Events",["Review upcoming catering events","Confirm client requirements and guest counts","Identify any changes or special requests"]],["Staffing & Team Assignments",["Review staff assignments","Confirm availability","Identify staffing gaps"]],["Supplies & Equipment",["Review ingredient and supply needs","Confirm equipment availability","Address any pending vendor deliveries"]],["Finance & Payments",["Review outstanding invoices and payments","Check upcoming expenses"]],["Issues Requiring Executive Decision",["Discuss items that need Cris's approval","Identify decisions that may affect upcoming events"]],["Action Items & Next Steps",["Confirm assigned responsibilities","Set deadlines","Identify follow-up items"]]];
+const NOTES=[["Upcoming Events",["Reviewed upcoming catering events and current client requirements.","Confirmed that guest counts and special requests should be reviewed before each event.","Identified the need to confirm final event details with clients."]],["Staffing & Team Assignments",["Reviewed upcoming staff assignments and availability.","Joy and Faith will confirm service crew assignments for the next events.","Any staffing gaps will be raised with Cris."]],["Supplies & Equipment",["Reviewed ingredient and equipment requirements for upcoming events.","Marichiel will confirm kitchen supply needs.","Equipment availability will be checked before the next Saturday event."]],["Finance & Payments",["Reviewed pending vendor invoices and upcoming expenses.","Outstanding payments will be monitored and followed up as needed."]],["Executive Decisions",["Cris approved moving forward with the current staffing plan.","Final menu and guest-count changes should be reviewed before event preparation begins."]]];
+const ACT=[["Confirm final guest counts with clients","Jonah Kris Llantino","June 9, 2026","High","Follow up with clients before event preparation"],["Confirm kitchen supply requirements","Marichiel Palino","June 9, 2026","High","Confirm required ingredients and supplies"],["Finalize service crew assignments","Joy Aunario & Faith Ventura","June 10, 2026","High","Confirm staff availability"],["Check equipment availability","Ernie Villanueva & Bhitoy Manalo","June 11, 2026","Medium","Report any missing or unavailable equipment"]];
+const attendees=`<ul><li>Cris Manalo — Business Owner &amp; Executive</li><li>Marichiel Palino — Kitchen Head</li><li>Joy Aunario — Service Crew Coordinator</li><li>Faith Ventura — Service Crew Coordinator</li><li>Jonah Kris Llantino — Executive Assistant</li></ul>`;
+const D3={
+ agenda:`<div class="doc"><div class="mono" style="color:var(--maroon)">4J’s Catering Services · Agenda</div><h3 style="margin-top:6px">Weekly Catering Operations Meeting</h3><div class="kv"><span><b>Date</b> Mon, 08 June 2026</span><span><b>Time</b> 10:00–10:45 AM</span><span><b>Where</b> Google Meet</span></div><h4>Attendees</h4>${attendees}${AG.map((s,i)=>`<h4>${i+1}. ${s[0]}</h4><ol>${s[1].map(x=>`<li>${x}</li>`).join("")}</ol>`).join("")}</div>`,
+ notes:`<div class="doc"><div class="mono" style="color:var(--maroon)">4J’s Catering Services · Meeting Notes</div><h3 style="margin-top:6px">Weekly Catering Operations Meeting</h3><div class="kv"><span><b>Date</b> June 8, 2026</span><span><b>Time</b> 10:00–10:45 AM</span><span><b>Facilitator</b> Jonah Kris Llantino</span></div>${NOTES.map((s,i)=>`<h4>${i+1}. ${s[0]}</h4><ul>${s[1].map(x=>`<li>${x}</li>`).join("")}</ul>`).join("")}<h4>Key takeaways</h4><p>The team reviewed upcoming events, staffing, supplies, equipment, and pending payments. Several follow-up tasks were assigned with specific owners and deadlines to keep event preparation on schedule.</p></div>`,
+ tracker:`<div class="tbl"><table><thead><tr><th>Action item</th><th>Owner</th><th>Deadline</th><th>Priority</th><th>Status</th><th>Follow-up notes</th></tr></thead><tbody>${ACT.map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td style="white-space:nowrap">${r[2]}</td><td><span class="pill ${r[3]==="High"?"hi":""}">${r[3]}</span></td><td><span class="pill">Pending</span></td><td>${r[4]}</td></tr>`).join("")}</tbody></table></div>`,
+ email:`<div class="doc"><div style="padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:14px"><span class="mono" style="color:var(--muted)">Subject</span><div style="font-weight:600;color:var(--ink)">Follow-Up: Weekly Catering Operations Meeting — June 8</div></div><p>Hi Cris,</p><p style="margin-top:10px">Thank you for today’s meeting. Here’s a quick summary of the key updates and next steps discussed:</p><h4>Key updates</h4><ul><li>Upcoming catering events and client requirements were reviewed.</li><li>Staffing assignments and availability were discussed.</li><li>Kitchen supplies and equipment requirements were reviewed.</li><li>Outstanding vendor payments were noted for follow-up.</li></ul><h4>Action items</h4><ul><li>Jonah: Confirm final guest counts with clients by June 9.</li><li>Marichiel: Confirm kitchen supply requirements by June 9.</li><li>Joy &amp; Faith: Finalize service crew assignments by June 10.</li><li>Ernie &amp; Bhitoy: Check equipment availability by June 11.</li></ul><p style="margin-top:12px">I’ll monitor the outstanding items and follow up on the assigned tasks as needed.</p><p style="margin-top:12px">Best,<br><b style="color:var(--ink)">Jonah Kris Llantino</b><br>Executive Assistant</p></div>`
+};
+W.p3=()=>`<h2 class="h2s"><span class="mono">Documents</span>From agenda to follow-up</h2><div class="chiptabs" role="tablist" aria-label="Meeting documents"><button class="ct" role="tab" type="button" aria-selected="true" data-doc="agenda">1 · Agenda</button><button class="ct" role="tab" type="button" aria-selected="false" data-doc="notes">2 · Meeting notes</button><button class="ct" role="tab" type="button" aria-selected="false" data-doc="tracker">3 · Action tracker</button><button class="ct" role="tab" type="button" aria-selected="false" data-doc="email">4 · Follow-up email</button></div><div id="docview">${D3.agenda}</div>`;
+const IT=[
+ {d:"Day 1 · Mon, Oct 19",t:"Arrival",r:[["3:55–5:20 AM","Flight","Depart Manila (MNL) → Cebu (CEB)",2045],["5:20–6:30 AM","Airport","Arrive at Mactan-Cebu International Airport",0],["6:30–7:30 AM","Transport","GrabCar: airport → Quest Hotel and Conference Center Cebu",500],["7:30–9:30 AM","Hotel","Breakfast, luggage drop-off, and rest",500],["9:30–11:00 AM","Business","Review supplier meeting materials and prepare for Tuesday",0],["11:00 AM–12:00 PM","Buffer","Unscheduled buffer / personal time",0],["12:00–1:00 PM","Meal","Lunch near hotel",500],["1:00–3:00 PM","Buffer","Rest / personal time",0],["3:00–4:00 PM","Hotel","Hotel check-in and settle in",null],["4:00–5:00 PM","Admin","Review Tuesday schedule and supplier meeting materials",0],["5:00–6:30 PM","Buffer","Free time / rest",0],["6:30–7:30 PM","Meal","Dinner near hotel",500],["7:30–8:00 PM","Admin","Brief review of Tuesday priorities",0],["8:00 PM onward","Personal","End of business activities / rest",0]]},
+ {d:"Day 2 · Tue, Oct 20",t:"Meetings & networking",r:[["7:30–8:30 AM","Meal","Breakfast and prepare for supplier meeting",500],["8:30–9:00 AM","Transport","Travel to supplier meeting location",300],["9:00–10:30 AM","Business","Meeting with potential catering supplier",0],["10:30–11:00 AM","Transport","Return to hotel",300],["11:00 AM–12:00 PM","Buffer","Rest and review supplier meeting notes",0],["12:00–1:00 PM","Meal","Lunch near hotel",500],["1:00–2:30 PM","Buffer","Rest / personal time",0],["2:30–3:30 PM","Business","Follow-up and business preparation",0],["3:30–4:30 PM","Buffer","Free time / rest before evening event",0],["4:30–5:30 PM","Transport","Travel to networking event",300],["5:30–6:30 PM","Buffer","Arrival, registration, and networking preparation",0],["6:30–8:30 PM","Business","Business networking event",1000],["8:30–9:30 PM","Transport","Return to hotel",300],["9:30 PM onward","Personal","Rest and prepare for Wednesday return",0]]},
+ {d:"Day 3 · Wed, Oct 21",t:"Return to Manila",r:[["7:00–8:00 AM","Meal","Breakfast and prepare for departure",500],["8:00–9:00 AM","Hotel","Pack belongings and complete hotel check-out",0],["9:00–9:30 AM","Buffer","Final check of belongings and travel documents",0],["9:30–10:30 AM","Transport","Travel to Mactan-Cebu International Airport",500],["10:30 AM–12:00 PM","Airport","Check-in, security, and waiting buffer",0],["12:00–1:15 PM","Flight","Depart Cebu (CEB) → Manila (MNL)",2035],["1:15–2:15 PM","Airport","Arrival, baggage claim, and airport buffer",0],["2:15–3:15 PM","Transport","Travel home from the airport",500],["3:15 PM onward","Personal","Rest and prepare for teaching responsibilities",0]]}
+];
+const CMP=[["Flight","Philippines AirAsia","₱4,080 round trip","Lower-cost direct option","Consider"],["Flight","Cebu Pacific","Research required","Worth comparing for schedule flexibility and fare","Consider"],["Flight","Philippine Airlines","Research required","Worth comparing for service and schedule","Consider"],["Hotel","Quest Hotel and Conference Center Cebu","₱9,400 for 2 nights","Business-friendly, close to Cebu Business Park","Recommended"],["Hotel","Seda Ayala Center Cebu","Research required","Inside Cebu Business Park","Consider"],["Hotel","Hotel Elizabeth Cebu","Research required","Near business and commercial areas","Consider"],["Transport","GrabCar","₱2,700 estimated","Convenient and easy to arrange","Recommended"],["Transport","Taxi","Research required","Widely available around business areas","Consider"],["Transport","Hotel car / private transfer","Research required","Predictable for scheduled transfers","Consider"]];
+const dayTable=i=>{const d=IT[i];const tot=d.r.reduce((a,r)=>a+(r[3]||0),0);return `<div class="tbl fade-in"><table><thead><tr><th>Time</th><th>Type</th><th>Activity</th><th class="num">Est. cost</th></tr></thead><tbody>${d.r.map(r=>`<tr><td style="white-space:nowrap">${r[0]}</td><td><span class="pill ${r[1]==="Business"?"hi":r[1]==="Buffer"?"ok":""}">${r[1]}</span></td><td>${r[2]}</td><td class="num">${r[3]===null?"In hotel cost":r[3]?peso(r[3]):"—"}</td></tr>`).join("")}</tbody><tfoot><tr><td colspan="3">${d.d} · day total</td><td class="num">${peso(tot)}</td></tr></tfoot></table></div>`};
+W.p4=()=>`<h2 class="h2s"><span class="mono">Brief</span>The trip request</h2>
+<div class="split"><div class="doc"><h3>Cebu Business Trip · October 2026</h3><div class="kv"><span><b>Traveler</b> Cris Manalo</span><span><b>Dates</b> Oct 19–21 (3 days / 2 nights)</span><span><b>Budget</b> ₱15,000–₱20,000</span></div><h4>Executive requirements</h4><ul><li>Business networking event on Tuesday evening</li><li>Meeting with a potential catering supplier on Tuesday morning</li><li>Enough travel time between locations</li><li>Hotel reasonably close to the meetings</li><li>Back in Cavite Wednesday afternoon to prepare for teaching</li></ul></div>
+<div class="doc"><h3>Preferences I planned around</h3><h4>Transportation</h4><ul><li>Morning departure, direct flight when available</li><li>Enough time between transport and meetings</li></ul><h4>Hotel</h4><ul><li>Close to the meeting location, private room, reliable Wi-Fi</li></ul><h4>Schedule</h4><ul><li>No overly tight days; Wednesday afternoon kept free</li></ul></div></div>
+<div class="kpis" style="margin-top:22px"><div class="kpi"><div class="k">Trip budget</div><div class="v">₱20,000</div><div class="s">Upper limit set by the executive</div></div><div class="kpi m"><div class="k">Itinerary estimate</div><div class="v">₱10,780</div><div class="s">Flights, transport, meals &amp; event fee</div></div><div class="kpi b"><div class="k">Remaining</div><div class="v">₱9,220</div><div class="s">Before hotel booking is confirmed</div></div></div>
+<h2 class="h2s"><span class="mono">Itinerary</span>Day by day, with buffers</h2><div class="chiptabs" role="tablist" aria-label="Itinerary days">${IT.map((d,i)=>`<button class="ct" role="tab" type="button" aria-selected="${i===0}" data-day="${i}">${d.d} · ${d.t}</button>`).join("")}</div><div id="dayview">${dayTable(0)}</div>
+<h2 class="h2s"><span class="mono">Research</span>Options compared</h2><div class="tbl"><table><thead><tr><th>Category</th><th>Option</th><th>Estimated cost</th><th>Key advantage</th><th>Recommendation</th></tr></thead><tbody>${CMP.map(r=>`<tr><td>${r[0]}</td><td><b>${r[1]}</b></td><td>${r[2]}</td><td>${r[3]}</td><td><span class="pill ${r[4]==="Recommended"?"hi":""}">${r[4]}</span></td></tr>`).join("")}</tbody></table></div>
+<p class="note">All travel options, costs, and schedules are for simulated portfolio planning. Prices, availability, and schedules should be verified before making any actual booking.</p>`;
+W.p5=()=>`<h2 class="h2s"><span class="mono">View</span>The command center</h2><div class="gallery" style="grid-template-columns:repeat(auto-fill,minmax(min(100%,380px),1fr))">${fig("img/01-priority-tasks.webp","Priority Tasks: the executive priority tracker")}${fig("img/02-executive-calendar.webp","Executive Calendar: a view-only link to the live Google Calendar")}${fig("img/03-meeting-follow-ups.webp","Meeting Follow-Ups: action items linked to the meeting notes")}${fig("img/04-portfolio-projects.webp","Portfolio Projects: one-click access to every project")}</div>
+<p style="margin-top:18px"><a class="btn btn-line" href="https://app.notion.com/p/Cris-Manalo-Executive-Command-Center-3dd3144b2af180fc8b9ae6b528d34292" target="_blank" rel="noopener">Open the live Notion workspace ↗</a></p>`;
+const CAT=[["Venue & Accommodation",68000,68000],["Food & Beverage",51500,57459],["Transportation",8200,10220],["Program & Materials",8000,8836.25],["Speakers & Talent",3000,2000],["Health & Safety",2500,1074.25],["Admin & Finance",1000,1015],["AV & Technical",1000,0],["Documentation & Comms",800,0]];
+const TL=[["Jun 21","Launched the sponsorship drive and set up the sponsor tracker"],["Jul 19","Budget estimate approved by the leadership board"],["Jul 22","Venue reserved with a ₱5,000 deposit; contract terms confirmed"],["Jul 26","Budget re-forecast when the headcount grew"],["Aug 2 – Aug 9","Materials, prizes, first-aid supplies, and signage procured"],["Aug 17","Financial status report issued; funding gap flagged"],["Aug 18","Venue balance, catering, and transport fuel released"],["Event days","On-site registration, supplementary meals, speaker fees, daily cash count",1],["After the event","Settle expenses, reconcile the ledger, send acknowledgement receipts"]];
+const fm=v=>peso(v,v%1?2:0);
+W.p6=()=>{const max=70000;return `<h2 class="h2s"><span class="mono">Dashboard</span>Where the budget landed</h2>
+<div class="kpis"><div class="kpi"><div class="k">Total budget cap</div><div class="v">₱160,000</div><div class="s">Approved spending ceiling</div></div><div class="kpi m"><div class="k">Actual spend</div><div class="v">₱148,604.50</div><div class="s">92.9% of cap used</div></div><div class="kpi b"><div class="k">Under cap</div><div class="v">₱11,395.50</div><div class="s">Remaining after all costs</div></div><div class="kpi"><div class="k">Operational budget</div><div class="v">₱144,000</div><div class="s">90% of cap</div></div><div class="kpi m"><div class="k">Contingency reserve</div><div class="v">₱16,000</div><div class="s">₱4,604.50 drawn for overrun</div></div><div class="kpi b"><div class="k">Funds raised</div><div class="v">₱140,050</div><div class="s">94.2% of actual spend</div></div></div>
+<div class="insight">Actual spending went ₱4,604.50 over the operational budget. Because the 10% reserve was set aside first, the overrun was fully absorbed, and the event closed ₱11,395.50 under the ₱160,000 cap.</div>
+<h2 class="h2s"><span class="mono">By category</span>Allocated vs. actual</h2><div class="doc"><div class="legend"><span><i style="background:var(--navy);opacity:.4"></i>Allocated</span><span><i style="background:var(--maroon)"></i>Actual</span><span>Scale: ₱0–₱70,000</span></div><div class="bars">${CAT.map(c=>{const v=c[1]-c[2];return `<div class="bar-row"><div class="lbl">${c[0]}</div><div class="bar-track"><div class="bar a" style="width:${c[1]/max*100}%"></div><div class="bar b" style="width:${c[2]/max*100}%"></div><div class="bar-vals"><span>${fm(c[1])} allocated</span><span>${fm(c[2])} actual</span><span class="${v<0?"over":""}">${v<0?"Over by "+fm(-v):v>0?"Under by "+fm(v):"On budget"}</span></div></div></div>`}).join("")}</div></div>
+<div class="split" style="margin-top:22px"><div><h2 class="h2s" style="margin-top:0"><span class="mono">Funding</span>Money in, by channel</h2><div class="doc"><div class="stack" role="img" aria-label="Cash 27%, E-wallet 42.3%, Bank deposit 30.7%"><span style="width:27.03%;background:var(--navy)"></span><span style="width:42.27%;background:var(--maroon)"></span><span style="width:30.70%;background:var(--ink)"></span></div><div class="tbl" style="border:0"><table style="min-width:0"><thead><tr><th>Channel</th><th class="num">Amount</th><th class="num">Share</th></tr></thead><tbody><tr><td>Cash on hand</td><td class="num">₱37,850</td><td class="num">27.0%</td></tr><tr><td>E-wallet (GCash)</td><td class="num">₱59,200</td><td class="num">42.3%</td></tr><tr><td>Bank deposit</td><td class="num">₱43,000</td><td class="num">30.7%</td></tr></tbody><tfoot><tr><td>Total sponsorships</td><td class="num">₱140,050</td><td class="num">100%</td></tr></tfoot></table></div><p style="font-size:12px;color:var(--muted);margin-top:10px">Funding gap vs. actual spend: <b style="color:var(--maroon)">₱8,554.50</b>, flagged for confirmation of the covering source.</p></div></div>
+<div><h2 class="h2s" style="margin-top:0"><span class="mono">Timeline</span>Leading up to event day</h2><ol class="tl">${TL.map(t=>`<li class="${t[2]?"ev":""}"><div class="when">${t[0]}</div><p>${t[1]}</p></li>`).join("")}</ol></div></div>
+<h2 class="h2s"><span class="mono">Open items</span>Flagged for a decision, not fixed quietly</h2><div class="tbl"><table><thead><tr><th>Item</th><th>What I found</th><th>Status</th></tr></thead><tbody><tr><td><b>Budget-release balance</b></td><td>The ending balance only works if one add-back was ₱500 rather than the ₱1,500 recorded.</td><td><span class="pill hi">Open</span></td></tr><tr><td><b>Two unlisted costs</b></td><td>A ₱5,000 chairs payment and ₱5,000 in appreciation tokens appear on only one record. If both are real, spend rises to about ₱158,600, still under the cap.</td><td><span class="pill hi">Open</span></td></tr><tr><td><b>Funding gap</b></td><td>Sponsorships fell ₱8,554.50 short of spending; the covering source needs to be confirmed.</td><td><span class="pill hi">Open</span></td></tr></tbody></table></div>
+<p class="note"><b>AI disclosure:</b> I used Claude (an AI assistant by Anthropic) as a productivity tool to help clean up, organize, and design the workbook and brief. All income and expense figures come from real event records. The allocated budget column is a baseline built for comparison, and a few standard event costs were added as clearly labeled placeholders. Names and confidential details were changed for privacy.</p>`};
+const FUNNEL=[["Outreach sent",5],["Intro call done",4],["Pitch scheduled",3],["Due diligence",2],["Committed",2],["Passed",1]];
+const PIPE=[
+ ["Teresa Lim","Anchorline Capital","Committed","Send SAFE for signature","Sep 28"],
+ ["Dave Burroughs","Birchwood Seed Partners","Committed","Wire instructions sent, confirming receipt","Sep 26"],
+ ["Priya Natarajan","Fernhollow Ventures","Due Diligence","Share updated cap table and metrics deck","Sep 29"],
+ ["Marcus Oyelaran","Thistle & Co Capital","Pitch Scheduled","Confirm Thursday 2 PM call","Sep 30"],
+ ["Renata Souza","Cross River Angels","Pitch Scheduled","Send deck ahead of Thursday's call","Sep 30"],
+ ["Leo Castellanos","Solstice Seed Fund","Intro Call Done","Follow up with a customer case study","Sep 24"],
+ ["Hana Whitfield","Granite Bay Partners","Intro Call Done","Awaiting partner feedback","Sep 22"],
+ ["Oliver Densmore","Palisade Angels","Outreach Sent","Second follow-up due","Sep 20"],
+ ["Grace Abimbola","Northfield Capital","Outreach Sent","Awaiting reply to first email","Sep 18"]
+];
+const stagePill=s=>s==="Committed"?"hi":s==="Due Diligence"?"ok":"";
+W.p7=()=>{const maxF=5;return `<h2 class="h2s"><span class="mono">Brief</span>What Mika asked for</h2>
+<div class="split"><div class="doc"><h3>Loopline · Seed Round</h3><div class="kv"><span><b>Founder</b> Mika Reyes</span><span><b>Target raise</b> $750,000</span><span><b>Instrument</b> SAFE</span><span><b>Timeline</b> 8-week close</span></div><h4>What she needed</h4><ul><li>One place to see every investor conversation, not five email threads</li><li>A reminder before each call with notes on who she's talking to</li><li>Warm intro requests drafted and ready to send</li><li>Data room access controlled by stage, so sensitive numbers only go out once an investor is serious</li><li>A short weekly summary before her Monday planning session</li></ul></div>
+<div class="doc"><h3>How I set it up</h3><ul><li>A single pipeline tracker in Google Sheets, one row per investor, filtered by stage</li><li>Calendar holds for every call, with a one-paragraph brief attached the night before</li><li>A three-tier data room: teaser deck at outreach, full deck after an intro call, cap table and financials only after an NDA and active term sheet review</li><li>A short access log so I always knew who had seen what</li></ul></div></div>
+<h2 class="h2s"><span class="mono">Dashboard</span>Where the round stands</h2>
+<div class="kpis"><div class="kpi"><div class="k">Target raise</div><div class="v">$750,000</div><div class="s">Seed round, SAFE instrument</div></div><div class="kpi m"><div class="k">Soft-committed</div><div class="v">$420,000</div><div class="s">56% of target, from 2 investors</div></div><div class="kpi b"><div class="k">In active conversation</div><div class="v">14</div><div class="s">Across outreach, calls, and diligence</div></div></div>
+<div class="insight">Two commits are in and due diligence is moving with a third. At the current pace, the round is on track to close inside the 8-week window, as long as this week's three pitches land.</div>
+<h2 class="h2s"><span class="mono">Pipeline</span>By stage</h2><div class="doc"><div class="bars">${FUNNEL.map(f=>`<div class="bar-row"><div class="lbl">${f[0]}</div><div class="bar-track"><div class="bar b" style="width:${f[1]/maxF*100}%"></div><div class="bar-vals"><span>${f[1]} investor${f[1]===1?"":"s"}</span></div></div></div>`).join("")}</div></div>
+<h2 class="h2s"><span class="mono">Tracker</span>A sample of the pipeline</h2><div class="tbl"><table><thead><tr><th>Investor</th><th>Firm</th><th>Stage</th><th>Next step</th><th>Last touch</th></tr></thead><tbody>${PIPE.map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td><span class="pill ${stagePill(r[2])}">${r[2]}</span></td><td>${r[3]}</td><td style="white-space:nowrap">${r[4]}</td></tr>`).join("")}</tbody></table></div>
+<p class="note">Showing 9 of 17 investors tracked. The full sheet includes contact history, the last email sent, and which tier of the data room each investor has reached.</p>
+<h2 class="h2s"><span class="mono">Weekly update</span>What Mika sees every Monday</h2><div class="doc"><div style="padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:14px"><span class="mono" style="color:var(--muted)">Subject</span><div style="font-weight:600;color:var(--ink)">Investor Update — Week of Sept 29</div></div><p>Hi Mika,</p><p style="margin-top:10px">Here's where things stand heading into this week:</p><ul><li><b>2 commits</b> totaling $420K. Birchwood's wire instructions are out, I'm tracking for confirmation.</li><li><b>Fernhollow</b> is in due diligence and asked for an updated cap table, sending today.</li><li><b>3 pitches</b> this week; decks are out ahead of Thursday's calls with Thistle &amp; Co and Cross River.</li><li><b>5 still in outreach</b>, follow-ups queued for anyone past a week of silence.</li></ul><p style="margin-top:12px">Let me know if priorities shift before Thursday.</p><p style="margin-top:12px">Best,<br><b style="color:var(--ink)">Jonah</b></p></div>
+<p class="note"><b>A note on this project:</b> Loopline, Mika Reyes, and every investor, firm, and figure here are invented for this exercise. No real company, person, or money is involved. I built it to show how I'd structure the pipeline, the follow-up rhythm, and the staged access that fundraising support actually runs on.</p>`};
+
+function project(id){
+ const i=P.findIndex(p=>p.id===id),p=P[i],prev=P[i-1],next=P[i+1];
+ return `${head(`<b>Work</b> · Project ${p.n}`,p.type==="real"?"Real project · anonymized":"Practice project · simulated client")}
+ <a class="back" href="#work">← All projects</a>
+ <div class="phead">${DRIVE[p.id]?`<a class="clipto" href="https://drive.google.com/drive/folders/${DRIVE[p.id]}" target="_blank" rel="noopener" title="Open the original files"><svg viewBox="0 0 26 64" fill="none" stroke="#8C93A3" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M9 20v26a4.5 4.5 0 0 0 9 0V12a7 7 0 0 0-14 0v36a10 10 0 0 0 20 0V20"/></svg><span>Originals ↗</span></a>`:""}<div><span class="eyebrow mono" style="margin:0">Project ${p.n} of ${String(P.length).padStart(2,"0")}</span><h1 class="h-display" style="margin-top:8px">${p.title}</h1><p class="sum">${p.sum}</p></div>
+ <dl class="meta-list"><div><dt class="mono">Type</dt><dd>${p.type==="real"?"Real project · details anonymized":"Practice project"}</dd></div><div><dt class="mono">Client</dt><dd>${p.client}</dd></div><div><dt class="mono">Tools</dt><dd>${p.tools.join(", ")}</dd></div><div><dt class="mono">Role</dt><dd>${p.type==="real"?"Coordinator & Finance Head":"Executive Assistant"}</dd></div></dl></div>
+ <div class="prose">${p.body.map(x=>`<p>${x}</p>`).join("")}</div>
+ ${W[id]()}
+ <nav class="pager" aria-label="More projects">${prev?`<a href="#${prev.id}"><span class="mono">← Previous · ${prev.n}</span><b>${prev.title}</b></a>`:`<a href="#work"><span class="mono">← Back</span><b>All projects</b></a>`}${next?`<a class="next" href="#${next.id}"><span class="mono">Next · ${next.n} →</span><b>${next.title}</b></a>`:`<a class="next" href="#write"><span class="mono">Next →</span><b>Write to Jonah</b></a>`}</nav>`;
+}
+
+/* ---------------- ABOUT ---------------- */
+function about(){
+ return `${head(`<b>About</b> · Jonah Kris V. Llantino`,"BS Psychology · Class of 2026")}
+ <div class="twocol" style="align-items:center">
+  <div class="about-photo"><div class="frame-a xfade"><img src="img/photo-grad-smile.webp" alt="Jonah Kris Llantino in graduation cap and gown"><img class="b" src="img/photo-grad.webp" alt="" aria-hidden="true"></div><div class="stamp"><div><b>7</b>semesters<br>Dean’s List</div></div></div>
+  <div>
+   <span class="eyebrow mono">About me</span>
+   <h1 class="h-display" style="font-size:clamp(34px,5vw,62px)">Read the situation. <em>Document it right</em> the first time.</h1>
+   <div style="display:grid;gap:12px;margin-top:20px">
+    <p>I finished my Bachelor of Science in Psychology at Kolehiyo ng Lungsod ng Dasmariñas in 2026, with seven semesters on the Dean’s List. Psychology taught me the two things this job runs on: read the situation before you act, and document everything accurately the first time.</p>
+    <p>I’m fluent in English and a native Filipino speaker, and I work in Google Workspace, Notion, and Slack every day. I use AI tools like Claude, ChatGPT, Gemini, and Grammarly to draft faster and check my own work, never to replace the judgment part.</p>
+    <p>Outside of work I play competitive chess, and I took gold at the LCUAA National Games. It’s the same instinct that makes me good at this: look a few moves ahead, and protect the important pieces.</p>
+    <p>I’m looking for one or two long-term clients who want a dependable second set of hands, not a task taker.</p>
+   </div>
+   <div class="signature">Jonah</div>
+  </div>
+ </div>
+ <section class="sec"><div class="sec-top"><h2 class="h-sec">Experience</h2><p>Different rooms, same job: keep the details straight and the schedule honest.</p></div>
+  <ol class="exp">
+   <li><span class="yr">2026</span><div><h3>Coordinator & Finance Head</h3><p class="org">Youth Leadership Organization</p><ul><li>Coordinated a 2-day event for 152 participants, managing schedules, volunteer assignments, and program flow.</li><li>Managed a ₱160,000 event budget by tracking expenses and keeping accurate financial documentation.</li></ul><a class="role-ic" href="#p6" style="text-decoration:none">See it in Project 06 →</a></div>
+    <div class="xstat"><div><div class="n">152</div><small>participants over two days</small></div><div><div class="n">₱160K</div><small>budget tracked to the receipt</small></div></div></li>
+   <li><span class="yr">Feb – Mar 2026</span><div><h3>Clinical Psychology Intern</h3><p class="org">JPPL Neuro Psychiatry, Testing, and Evaluation Center</p><ul><li>Managed confidential client records and administrative documentation while coordinating task assignments for a 20-member intern team.</li><li>Kept accurate records and streamlined daily administrative workflows through organized documentation.</li></ul><span class="role-ic">Certificate of completion</span></div>
+    <div class="xstat"><div><div class="n">200</div><small>internship hours completed</small></div><div><div class="n">20</div><small>interns coordinated</small></div><button type="button" class="access" data-zoom="img/cert-jppl-internship.webp" data-cap="Certificate of Completion · 200-hour internship, JPPL Neuro Psychiatry (signature removed)"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M6 3h9l3 3v15H6z M15 3v3h3 M9 11h6 M9 15h6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Access certificate<span aria-hidden="true">↗</span></button></div></li>
+   <li><span class="yr">2023 – 2024</span><div><h3>Volunteer Administrative Assistant</h3><p class="org">KLD Guidance Counselor’s Office</p><ul><li>Organized confidential student records and administrative documents to improve office efficiency.</li><li>Helped coordinate student activities while keeping documentation and schedules accurate.</li></ul></div>
+    <div class="xstat"><div><div class="n">2 yrs</div><small>of confidential records handled with care</small></div></div></li>
+   <li><span class="yr">2022 – 2025</span><div><h3>Music Team Chairwoman</h3><p class="org">Youth Leadership Organization</p><ul><li>Managed weekly schedules for musicians, sound technicians, and multimedia team members, ensuring full coverage for recurring programs and special events.</li><li>Coordinated event logistics, annual planning, and team evaluations while maintaining technical equipment.</li></ul></div>
+    <div class="xstat"><div><div class="n">3 yrs</div><small>of weekly schedules, never a gap in coverage</small></div></div></li>
+  </ol>
+ </section>
+ <section class="sec" id="certs">
+  <div class="sec-top"><h2 class="h-sec">Certificates <em>& records</em></h2><p>Seven executive-assistant courses on Alison, plus a university course, a leadership program, and my internship. Tap “Access certificate” to view each one. Signatures are removed for privacy.</p></div>
+  <div class="alison">
+   <div class="courses">
+    ${[["Executive Assistant Skills",98,"Jul 14, 2026"],["Specialised Skills for Executive Assistants",80,"Jul 15, 2026"],["Administrative Assistant Training",88,"Jul 16, 2026"],["Gmail: Maximize Your Email Productivity",96,"Jul 16, 2026"],["Gmail Calendar for Business Masterclass",84,"Jul 20, 2026"],["Fundamentals of Google Docs",88,"Aug 5, 2026"],["Basics of Google Sheets",95,"Aug 5, 2026"]].map(c=>`<div class="course"><div><b>${c[0]}</b><small>Alison · completed ${c[2]}</small></div><div class="meter" aria-hidden="true"><i style="width:${c[1]}%"></i></div><div class="sc">${c[1]}%</div></div>`).join("")}
+    <div class="sum"><span class="mono">Alison learner record</span><span>7 courses · 13 h 55 m study time · 90% average</span></div>
+   </div>
+   <div>
+    <div class="recordcard">
+     <span class="mono" style="color:var(--muted)">Alison learner record</span>
+     <b>7 courses, one record</b>
+     <small>Three pages listing every course, score, and completion date.</small>
+     <button type="button" class="access" data-zoom="img/cert-alison-1.webp|img/cert-alison-2.webp|img/cert-alison-3.webp" data-cap="Alison Learner Record (signature removed)"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M6 3h9l3 3v15H6z M15 3v3h3 M9 11h6 M9 15h6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Access certificate<span aria-hidden="true">↗</span></button>
+    </div>
+   </div>
+  </div>
+  <ul class="wall">
+   <li><span class="kind mono">Internship</span><div><b>200-hour Internship Program</b><small>JPPL Neuro Psychiatry, Testing, and Evaluation Center · Feb 9 – Mar 19, 2026</small></div><button type="button" class="access" data-zoom="img/cert-jppl-internship.webp" data-cap="Certificate of Completion · 200-hour internship, JPPL Neuro Psychiatry (signature removed)"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M6 3h9l3 3v15H6z M15 3v3h3 M9 11h6 M9 15h6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Access certificate<span aria-hidden="true">↗</span></button></li>
+   <li><span class="kind mono">Course</span><div><b>Basics of Resilience</b><small>University of the Philippines Open University · 16 hours · Feb 2026</small></div><button type="button" class="access" data-zoom="img/cert-resilience.webp" data-cap="Certificate of Accomplishment · Basics of Resilience, UP Open University"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M6 3h9l3 3v15H6z M15 3v3h3 M9 11h6 M9 15h6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Access certificate<span aria-hidden="true">↗</span></button></li>
+   <li><span class="kind mono">Program</span><div><b>Beyond Success</b><small>Leadership and personal growth program by Dr. John C. Maxwell · EQUIP</small></div><button type="button" class="access" data-zoom="img/cert-beyond-success.webp" data-cap="Participant Certificate · Beyond Success leadership program by Dr. John C. Maxwell (signatures removed)"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M6 3h9l3 3v15H6z M15 3v3h3 M9 11h6 M9 15h6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Access certificate<span aria-hidden="true">↗</span></button></li>
+   <li><span class="kind mono">Training</span><div><b>VA Training for E-commerce/Dropshipping</b><small>Chris eCom. VA Services · Shopify order processing, customer support & CRM platforms · Jul 25, 2026</small></div><button type="button" class="access" data-zoom="img/cert-chris-ecom.webp" data-cap="Certificate of Completion · VA Training for E-commerce/Dropshipping, Chris eCom. VA Services (signatures removed)"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M6 3h9l3 3v15H6z M15 3v3h3 M9 11h6 M9 15h6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Access certificate<span aria-hidden="true">↗</span></button></li>
+  </ul>
+ </section>
+ <section class="sec cards3" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+  <div class="card"><h3>Education</h3><ul><li><b>BS Psychology</b><small>Kolehiyo ng Lungsod ng Dasmariñas · 2026</small></li><li><b>Dean’s Lister</b><small>Seven semesters</small></li><li><b>LCUAA National Games</b><small>Gold medalist, chess</small></li><li><b>Relevant coursework</b><small>Industrial & Organizational Psychology · Strategic & HR Management · Group Dynamics · Psychological Assessment</small></li></ul></div>
+  <div class="card"><h3>Languages & tools</h3><ul><li><b>English</b><small>Fluent, written and spoken</small></li><li><b>Filipino</b><small>Native</small></li><li><b>Workspace</b><small>Google Calendar, Gmail, Docs, Sheets, Slides, Drive, Notion, Slack</small></li><li><b>Communication</b><small>Zoom, Google Meet, Viber, WhatsApp</small></li><li><b>AI</b><small>Claude, ChatGPT, Gemini, Grammarly</small></li></ul></div>
+ </section>`;
+}
+
+/* ---------------- SETUP ---------------- */
+function setup(){
+ const zones=[["","",[["auto","My local time"]]],["","United States",[["America/New_York","US Eastern (New York)"],["America/Chicago","US Central (Chicago)"],["America/Denver","US Mountain (Denver)"],["America/Phoenix","US Arizona (Phoenix)"],["America/Los_Angeles","US Pacific (Los Angeles)"],["America/Anchorage","US Alaska"],["Pacific/Honolulu","US Hawaii"]]],["","Canada",[["America/Toronto","Canada Eastern (Toronto)"],["America/Vancouver","Canada Pacific (Vancouver)"]]],["","United Kingdom & Europe",[["Europe/London","UK (London)"],["Europe/Dublin","Ireland (Dublin)"],["Europe/Berlin","Central Europe (Berlin, Paris)"],["Europe/Amsterdam","Netherlands (Amsterdam)"]]],["","Middle East & Asia",[["Asia/Dubai","UAE (Dubai)"],["Asia/Singapore","Singapore"],["Asia/Hong_Kong","Hong Kong"],["Asia/Tokyo","Japan (Tokyo)"]]],["","Australia & New Zealand",[["Australia/Sydney","Australia Eastern (Sydney, Melbourne)"],["Australia/Brisbane","Australia (Brisbane)"],["Australia/Adelaide","Australia Central (Adelaide)"],["Australia/Perth","Australia Western (Perth)"],["Pacific/Auckland","New Zealand (Auckland)"]]]];
+ return `${head(`<b>Setup</b> · Remote readiness`,"Checked · 2026")}
+ <div class="twocol">
+  <div><span class="eyebrow mono">Remote setup</span><h1 class="h-display" style="font-size:clamp(34px,5vw,62px)">The unglamorous details that make me <em>reachable.</em></h1>
+   <div class="checklist" style="margin-top:28px">
+    ${[["Internet","Platinum fiber at 230 Mbps"],["Backup internet","GOMO mobile data hotspot"],["Power backup","Nearby coworking space as a contingency during outages"],["Equipment","Personal laptop, Intel Core i5, 12th generation"],["Availability","US, UK, and Australian time zones · open to graveyard shift"],["Based in","Dasmariñas, Cavite, Philippines (PHT, UTC+8)"]].map(r=>`<div class="check"><span class="box" aria-hidden="true">✓</span><b>${r[0]}</b><span>${r[1]}</span></div>`).join("")}
+   </div></div>
+  <div class="tz">
+   <span class="mono" style="color:var(--rose)">Time-zone check</span>
+   <h3 style="margin-top:8px">Will my hours work for you?</h3>
+   <p style="margin-top:8px">Pick your time zone. The maroon band shows where a 9 AM–5 PM workday in your zone lands on my clock in Cavite.</p>
+   <label style="display:block;margin-top:14px">Your time zone<select id="tzsel">${zones.map(g=>g[1]?`<optgroup label="${g[1]}">${g[2].map(z=>`<option value="${z[0]}">${z[1]}</option>`).join("")}</optgroup>`:g[2].map(z=>`<option value="${z[0]}">${z[1]}</option>`).join("")).join("")}</select></label>
+   <div class="clocks"><div><span class="mono" id="tzname">Your time</span><div class="t" id="tzyours">--:--</div></div><div><span class="mono">Philippines · PHT</span><div class="t" data-clock="Asia/Manila">--:--</div></div></div>
+   <span class="mono" style="color:var(--on-dark-2)">Your 9–5 on my 24-hour day</span>
+   <div class="day24"><div id="seg1" class="seg"></div><div id="seg2" class="seg"></div><div class="ticks"></div></div>
+   <div class="day24-l"><span>12 AM</span><span>6 AM</span><span>12 PM</span><span>6 PM</span><span>12 AM</span></div>
+   <p id="tzsum" style="margin-top:14px;font-weight:600"></p>
+  </div>
+ </div>`;
+}
+
+/* ---------------- WRITE ---------------- */
+function write(){
+ return `${head(`<b>Write</b> · New message`,"To: Jonah Kris Llantino")}
+ <div class="write">
+  <div>
+   <span class="eyebrow mono">Contact</span>
+   <h1 class="h-display" style="font-size:clamp(36px,5vw,64px)">Tell me about <em>your week.</em></h1>
+   <p class="lede" style="margin-top:16px">Fill in the message on the right. Include these three things so my first reply is useful instead of a round of questions:</p>
+   <div class="need"><div><i>1</i><p><b>Your full name,</b> so I know who I’m writing back to.</p></div><div><i>2</i><p><b>The email you actually check</b> during your working hours.</p></div><div><i>3</i><p><b>Your specific concerns:</b> the tasks or hours you want off your plate.</p></div></div>
+   <div class="mini"><img src="img/avatar.webp" alt="Jonah Kris Llantino"><div><div class="signature">Jonah</div><span class="mono" style="color:var(--muted)">Virtual Executive Assistant</span></div></div>
+   <div class="alt">
+    <div><span><span class="mono" style="color:var(--muted)">Email</span><br><b id="em">${EMAIL}</b></span><button class="copy" type="button" data-copy="em">Copy</button></div>
+    <div><span><span class="mono" style="color:var(--muted)">WhatsApp</span><br><b id="wa">+63 968 471 1399</b></span><button class="copy" type="button" data-copy="wa">Copy</button></div>
+    <div><span><span class="mono" style="color:var(--muted)">LinkedIn</span><br><a href="https://www.linkedin.com/in/jonah-llantino/" target="_blank" rel="noopener"><b>linkedin.com/in/jonah-llantino</b></a></span></div>
+   </div>
+  </div>
+  <form class="compose" id="compose" novalidate>
+   <div class="cbar"><b>New message</b><span class="dots" aria-hidden="true"><span></span><span></span><span></span></span></div>
+   <div class="field to"><label>To</label><div class="v"><span class="chip"><img src="img/avatar.webp" alt="">Jonah Kris Llantino</span><span style="color:var(--muted)">${EMAIL}</span></div></div>
+   <div class="field"><label for="fname">Your name</label><input id="fname" name="fname" autocomplete="name" placeholder="Full name" required></div>
+   <div class="field"><label for="femail">Your email</label><input id="femail" name="femail" type="email" autocomplete="email" placeholder="The email you actually check" required></div>
+   <div class="field"><label for="fsubj">Subject</label><input id="fsubj" name="fsubj" placeholder="e.g. Looking for a part-time EA, US Eastern hours" required></div>
+   <div class="field msg"><label for="fmsg" class="mono" style="padding-top:10px">Message</label><textarea id="fmsg" name="fmsg" placeholder="Hi Jonah, here’s what my week looks like and what I’d like taken off my plate…" required></textarea></div>
+   <div class="attach"><label class="drop" id="drop" for="ffiles"><input id="ffiles" type="file" multiple><span aria-hidden="true">📎</span><span><b style="color:var(--ink)">Add attachments</b> · drag files here or click to choose</span></label><div class="files" id="files"></div></div>
+   <div class="cfoot"><span class="err" id="err" role="alert"></span><div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap"><button class="btn btn-maroon" type="submit">Send Email to Jonah <span aria-hidden="true">→</span></button><button type="button" class="copy-inline" data-copy="em2">Copy email address instead</button><span id="em2" hidden>${EMAIL}</span></div></div>
+  </form>
+ </div>`;
+}
+
+/* ---------------- render & router ---------------- */
+const VIEWS={cover,offer,work,about,setup,write};
+let current=null, files=[];
+function render(r){
+ $("#app").innerHTML=(VIEWS[r]||project)(r);
+ document.querySelectorAll(".tab").forEach(t=>t.toggleAttribute("aria-current",false));
+ const sect=r.startsWith("p")?"work":r; const at=document.querySelector(`.tab[data-r="${sect}"]`); if(at) at.setAttribute("aria-current","page");
+ document.querySelector(".sheet").classList.toggle("is-cover",r==="cover");
+ document.title=r==="offer"?"Jonah Kris Llantino · Virtual Executive Assistant":"Jonah Kris Llantino · "+(P.find(p=>p.id===r)?.title||r[0].toUpperCase()+r.slice(1));
+ tick(); if(r==="offer") countUp(); if(r==="setup") tzUpdate(); if(r==="write") files=[];
+}
+function go(){
+ let r=location.hash.slice(1)||"offer"; if(r==="services"){ r="offer"; }
+ if(!ROUTES.includes(r)) r="offer";
+ if(r===current) return;
+ const back=current&&ROUTES.indexOf(r)<ROUTES.indexOf(current);
+ document.documentElement.classList.toggle("rev",!!back);
+ const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+ const doit=()=>{render(r); window.scrollTo({top:0,behavior:"instant"});};
+ current=r;
+ if(document.startViewTransition && !reduce) document.startViewTransition(doit); else doit();
+}
+window.addEventListener("hashchange",go);
+
+/* clocks */
+function fmtTime(tz){try{return new Date().toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit",timeZone:tz})}catch(_){return new Date().toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"})}}
+function tick(){
+ document.querySelectorAll("[data-clock]").forEach(e=>e.textContent=fmtTime(e.dataset.clock));
+ document.querySelectorAll("[data-yours]").forEach(e=>e.textContent="Your time: "+new Date().toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"}));
+ const y=$("#tzyours"); if(y){const z=$("#tzsel").value; y.textContent=z==="auto"?new Date().toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"}):fmtTime(z);}
+ const t=$("#today"); if(t) t.textContent=weekLabel()+" · Philippines "+fmtTime("Asia/Manila");
+}
+setInterval(tick,15000);
+function offsetMin(tz){ // minutes ahead of UTC for tz right now
+ const d=new Date(); const s=d.toLocaleString("en-US",{timeZone:tz,hour12:false,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"});
+ const [md,hm]=s.split(", "); const [mo,da,yr]=md.split("/").map(Number); let [h,m]=hm.split(":").map(Number); if(h===24)h=0;
+ return Math.round((Date.UTC(yr,mo-1,da,h,m)-Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate(),d.getUTCHours(),d.getUTCMinutes()))/60000);
+}
+const hh=h=>{h=((h%24)+24)%24;const hr=Math.floor(h),mi=Math.round((h-hr)*60);const ap=hr<12?"AM":"PM";const h12=hr%12||12;return h12+(mi?":"+String(mi).padStart(2,"0"):"")+" "+ap};
+function tzUpdate(){
+ const sel=$("#tzsel"); if(!sel) return; const z=sel.value;
+ const yo=z==="auto"?-new Date().getTimezoneOffset():offsetMin(z); const ph=offsetMin("Asia/Manila");
+ const diff=(ph-yo)/60; const s=9+diff, e=17+diff;
+ const a=((s%24)+24)%24; const len=8; const s1=$("#seg1"), s2=$("#seg2");
+ if(a+len<=24){s1.style.left=a/24*100+"%";s1.style.width=len/24*100+"%";s2.style.width="0"}
+ else{s1.style.left=a/24*100+"%";s1.style.width=(24-a)/24*100+"%";s2.style.left="0";s2.style.width=(a+len-24)/24*100+"%"}
+ $("#tzname").textContent=z==="auto"?"Your time":sel.options[sel.selectedIndex].text;
+ const night=a>=18||a<6;
+ $("#tzsum").textContent=diff===0?"We share a clock. Your 9–5 is my 9–5.":`Your 9 AM–5 PM is ${hh(s)} to ${hh(e)} in the Philippines. ${night?"That’s a graveyard shift for me, and I’m open to it.":"That sits inside my regular day."}`;
+ tick();
+}
+
+/* count up */
+function countUp(){
+ if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+ const els=[...document.querySelectorAll("[data-count]")];
+ const io=new IntersectionObserver(es=>es.forEach(en=>{ if(!en.isIntersecting) return; io.unobserve(en.target);
+  const el=en.target,end=+el.dataset.count,pre=el.dataset.pre||"",t0=performance.now(),dur=1100;
+  const step=t=>{const k=Math.min(1,(t-t0)/dur),v=Math.round(end*(1-Math.pow(1-k,3)));el.textContent=pre+(el.hasAttribute("data-fmt")?v.toLocaleString("en-US"):v);if(k<1)requestAnimationFrame(step)};
+  requestAnimationFrame(step);}),{threshold:.4});
+ els.forEach(e=>io.observe(e));
+}
+
+/* interactions */
+document.addEventListener("click",e=>{
+ const sc=e.target.closest("[data-scroll]"); if(sc){e.preventDefault();document.getElementById("services").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});return;}
+ const sv=e.target.closest("[data-svc]"); if(sv){const s=SERV.find(x=>x.id===sv.dataset.svc);document.querySelectorAll("[data-svc]").forEach(b=>b.setAttribute("aria-expanded",b.dataset.svc===s.id));$("#drawer").innerHTML=drawer(s);return;}
+ const z=e.target.closest("[data-zoom]"); if(z){LB.pages=z.dataset.zoom.split("|");LB.cap=z.dataset.cap;LB.i=0;lbShow();$("#lb").showModal();return;}
+ const ct=e.target.closest(".ct"); if(ct){ct.parentElement.querySelectorAll(".ct").forEach(b=>b.setAttribute("aria-selected",b===ct));
+  if(ct.dataset.lbl)$("#lblview").innerHTML=fig(`img/${ct.dataset.lbl}.webp`,`Label ${ct.dataset.name}`);
+  if(ct.dataset.doc)$("#docview").innerHTML=`<div class="fade-in">${D3[ct.dataset.doc]}</div>`;
+  if(ct.dataset.day)$("#dayview").innerHTML=dayTable(+ct.dataset.day);return;}
+ const c=e.target.closest("[data-copy]"); if(c){copyText(document.getElementById(c.dataset.copy).textContent,c);return;}
+ const rm=e.target.closest("[data-rm]"); if(rm){files.splice(+rm.dataset.rm,1);drawFiles();return;}
+});
+document.addEventListener("change",e=>{ if(e.target.id==="tzsel") tzUpdate(); if(e.target.id==="ffiles"){addFiles(e.target.files);e.target.value="";} });
+function copyText(txt,btn){
+ const done=()=>{if(btn){const o=btn.textContent;btn.textContent="Copied";setTimeout(()=>btn.textContent=o,1600)}};
+ try{navigator.clipboard.writeText(txt).then(done,()=>fallbackCopy(txt,done))}catch(_){fallbackCopy(txt,done)}
+}
+function fallbackCopy(txt,done){const ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");done()}catch(_){}ta.remove()}
+const kb=n=>n<1024*1024?Math.max(1,Math.round(n/1024))+" KB":(n/1048576).toFixed(1)+" MB";
+function addFiles(list){[...list].forEach(f=>files.push({name:f.name,size:f.size}));drawFiles()}
+function drawFiles(){const box=$("#files");if(box)box.innerHTML=files.map((f,i)=>`<span class="file">📄 ${esc(f.name)} <small style="color:var(--muted)">${kb(f.size)}</small><button type="button" data-rm="${i}" aria-label="Remove ${esc(f.name)}">×</button></span>`).join("")}
+document.addEventListener("dragover",e=>{const d=e.target.closest&&e.target.closest("#drop");if(d){e.preventDefault();d.classList.add("over")}});
+document.addEventListener("dragleave",e=>{const d=e.target.closest&&e.target.closest("#drop");if(d)d.classList.remove("over")});
+document.addEventListener("drop",e=>{const d=e.target.closest&&e.target.closest("#drop");if(d){e.preventDefault();d.classList.remove("over");addFiles(e.dataTransfer.files)}});
+let lastMsg="";
+document.addEventListener("submit",e=>{
+ if(e.target.id!=="compose") return; e.preventDefault();
+ const f=e.target, name=f.fname.value.trim(), mail=f.femail.value.trim(), subj=f.fsubj.value.trim(), msg=f.fmsg.value.trim();
+ const miss=[]; if(!name)miss.push("your name"); if(!/^\S+@\S+\.\S+$/.test(mail))miss.push("a valid email"); if(!subj)miss.push("a subject"); if(!msg)miss.push("a message");
+ if(miss.length){$("#err").textContent="Please add "+miss.join(", ")+".";return;} $("#err").textContent="";
+ const body=`${msg}\n\n—\nFrom: ${name}\nReply to: ${mail}${files.length?`\nAttachments to include: ${files.map(x=>x.name).join(", ")}`:""}`;
+ lastMsg=`To: ${EMAIL}\nSubject: ${subj}\n\n${body}`;
+ const a=document.createElement("a"); a.href=`mailto:${EMAIL}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`; a.rel="noopener"; document.body.appendChild(a); a.click(); a.remove();
+ $("#popmsg").innerHTML=`Your message to Jonah is ready in your email app, with your subject and message filled in.${files.length?` <b>Attach ${files.length===1?"your file":"your "+files.length+" files"} there</b>, then press Send.`:" Press Send there to deliver it."}<br><br><span style="color:var(--muted)">If your email app didn’t open, copy the message and send it to <b>${EMAIL}</b>.</span>`;
+ $("#pop").showModal();
+});
+$("#popclose").addEventListener("click",()=>$("#pop").close());
+$("#popcopy").addEventListener("click",e=>copyText(lastMsg,e.target));
+const LB={pages:[],i:0,cap:""};
+function lbShow(){const n=LB.pages.length;$("#lbimg").src=LB.pages[LB.i];$("#lbimg").alt=LB.cap;$("#lbcap").textContent=LB.cap+(n>1?` · page ${LB.i+1} of ${n}`:"");$("#lbprev").hidden=$("#lbnext").hidden=n<2;$("#lbprev").disabled=LB.i===0;$("#lbnext").disabled=LB.i===n-1;}
+$("#lbprev").addEventListener("click",()=>{if(LB.i>0){LB.i--;lbShow()}});
+$("#lbnext").addEventListener("click",()=>{if(LB.i<LB.pages.length-1){LB.i++;lbShow()}});
+$("#lb").addEventListener("keydown",e=>{if(e.key==="ArrowRight")$("#lbnext").click();if(e.key==="ArrowLeft")$("#lbprev").click();});
+$("#lbclose").addEventListener("click",()=>$("#lb").close());
+$("#lb").addEventListener("click",e=>{if(e.target.id==="lb")$("#lb").close()});
+
+go();
+</script>
+
+</body></html>
